@@ -17,6 +17,8 @@ String.prototype.replaceAt = function (index, char) {
 	return this.substr(0, index) + char + this.substr(index + char.length);
 };
 
+const requestAnimationFrameLocal = requestAnimationFrame;
+
 const setStyle = (element, property, value) => {
 	element.style[property] = value;
 };
@@ -915,7 +917,7 @@ const tick = (now) => {
 	}
 
 	if (jobs.length || tweens.length) {
-		ticking = requestAnimationFrame(tick);
+		ticking = requestAnimationFrameLocal(tick);
 	} else {
 		ticking = 0;
 	}
@@ -947,7 +949,7 @@ const liike = (handler) =>
 			tweens.push(tween);
 		});
 		if (!ticking) {
-			ticking = requestAnimationFrame(tick);
+			ticking = requestAnimationFrameLocal(tick);
 		}
 	};
 
@@ -3993,7 +3995,7 @@ class HealthCard {
 				() => {
 					playSound(cardExpiresSound);
 					this.cardElement.style.filter = "grayscale(1)";
-					requestAnimationFrame(() => {
+					requestAnimationFrameLocal(() => {
 						baunceElement(this.cardElement, 20, "top");
 						zoomUpAndFadeOut(this.cardElement, 500, () => {
 							this.cardElement.remove();
@@ -4093,7 +4095,7 @@ class ShieldCard {
 				() => {
 					playSound(cardExpiresSound);
 					this.cardElement.style.filter = "grayscale(1)";
-					requestAnimationFrame(() => {
+					requestAnimationFrameLocal(() => {
 						baunceElement(this.cardElement, 20, "top");
 						zoomUpAndFadeOut(this.cardElement, 500, () => {
 							this.cardElement.remove();
@@ -4193,7 +4195,7 @@ class DamageCard {
 				() => {
 					playSound(cardExpiresSound);
 					this.cardElement.style.filter = "grayscale(1)";
-					requestAnimationFrame(() => {
+					requestAnimationFrameLocal(() => {
 						baunceElement(this.cardElement, 20, "top");
 						zoomUpAndFadeOut(this.cardElement, 500, () => {
 							this.cardElement.remove();
