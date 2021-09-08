@@ -1043,7 +1043,7 @@ const getSVG = (svg, ...colors) => {
 // #region - Monetization
 const monetization = document.monetization;
 
-window.updatePremiumState = (isPremium) => {
+updatePremiumState = (isPremium) => {
 	// TODO: Change something in game here!
 	currentGameState.isPremium = isPremium;
 	const worldButtons = querySelectorAll(".world-select button");
@@ -4644,7 +4644,7 @@ const showTutorial = (delay = 0) => {
 };
 
 const setup = () => {
-	loadGame(true);
+	loadGame();
 
 	if (currentGameState.soundOn !== null) {
 		showTutorial();
