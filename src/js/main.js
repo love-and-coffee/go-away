@@ -170,7 +170,7 @@ const showPopup = (
 
 	popupClass += " " + additonalClass;
 
-	let popup = `<div id="popup-${popupId}" class="popup-container"><div class="${popupClass}"><div class="popup-content">${content}</div><div class="pb">`;
+	let popup = `<div id="popup-${popupId}" class="popup-container"><div class="${popupClass}"><div class="popup-content">${content}</div><div class="popup-buttons">`;
 
 	buttons.forEach((button, buttonIndex) => {
 		let buttonClass = "";
@@ -306,9 +306,9 @@ const changeGameSpeed = () => {
 const initGameSpeed = () => {
 	addContent(
 		gameControlElement,
-		`<button id="gs"><b>1x</b><b>2x</b><b>4x <b class="vip">V.I.P.</b></b></button>`
+		`<button id="game-speed"><b>1x</b><b>2x</b><b>4x <b class="vip">V.I.P.</b></b></button>`
 	);
-	gameSpeedButtonElement = querySelector("#gs", gameControlElement);
+	gameSpeedButtonElement = querySelector("#game-speed", gameControlElement);
 	addEventListener(gameSpeedButtonElement, "click", changeGameSpeed);
 	displayActiveGameSpeed();
 	updateGameSpeedLock();
@@ -319,7 +319,7 @@ const updateGameSpeedLock = () => {
 		currentGameState.hasDoubleSpeedUnlocked === false && currentGameState.isPremium === false;
 	const speed4locked = currentGameState.isPremium === false;
 
-	querySelectorAll("#gs > b", gameControlElement).forEach((speedButton, speedIndex) => {
+	querySelectorAll("#game-speed > b", gameControlElement).forEach((speedButton, speedIndex) => {
 		if (speedIndex == 1) {
 			speedButton.classList.toggle("locked", speed2locked);
 		}
@@ -382,7 +382,7 @@ let shieldSvgElement;
 const damageElement = querySelector("#damage");
 let damageAmountElement;
 let damageSvgElement;
-const cardSlotElements = querySelectorAll(".cs");
+const cardSlotElements = querySelectorAll(".card-slot");
 // #endregion
 
 // #region - Animations
@@ -1059,7 +1059,7 @@ const monetization = document.monetization;
 updatePremiumState = (isPremium) => {
 	// TODO: Change something in game here!
 	currentGameState.isPremium = isPremium;
-	const worldButtons = querySelectorAll(".ws button");
+	const worldButtons = querySelectorAll(".world-select button");
 
 	if (worldButtons.length > 3) {
 		worldButtons[3].classList.toggle(
@@ -3764,7 +3764,7 @@ const showWorldSelectScreen = () => {
 		],
 		() => {},
 		true,
-		"ws"
+		"world-select"
 	);
 };
 
