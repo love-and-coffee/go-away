@@ -360,7 +360,7 @@ const screenHeight = documentElement.clientHeight;
 
 addContent(
 	document.body,
-	`<div id="root"><div id="background"></div><div id="gc"></div><div id="top"><div id="year"></div></div><div id="earth"><div id="stats"><div id="health"></div><div id="shield"></div><div id="damage"></div></div></div><div id="cards">${'<div class="cs"></div>'.repeat(
+	`<div id="root"><div id="background"></div><div id="gc"></div><div id="top"><div id="year"></div></div><div id="earth"><div id="stats"><div id="health"></div><div id="shield"></div><div id="damage"></div></div></div><div id="cards">${'<div class="card-slot"></div>'.repeat(
 		6
 	)}</div></div>`
 );
@@ -780,6 +780,7 @@ const setupWorld = (world) => {
 		cardContainer.style.display = "none";
 		cardContainer.innerHTML = "";
 	});
+
 	currentGameState.cards.forEach((card, index) => {
 		cardSlotElements[index].style.display = "flex";
 	});
