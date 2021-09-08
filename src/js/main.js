@@ -354,8 +354,9 @@ const initSocial = () => {
 // #endregion
 
 // #region - Globals
-const screenWidth = document.documentElement.clientWidth;
-const screenHeight = document.documentElement.clientHeight;
+const documentElement = document.documentElement;
+const screenWidth = documentElement.clientWidth;
+const screenHeight = documentElement.clientHeight;
 
 addContent(
 	document.body,
@@ -1081,13 +1082,13 @@ if (monetization) {
 
 // #region - Save/Load Game
 const saveGame = (state) => {
-	localStorage.setItem("js13kgames-jam-2021", JSON.stringify(state));
+	localStorage.setItem("go-away", JSON.stringify(state));
 
 	return state;
 };
 
 const loadGame = (forceNew = false) => {
-	const state = JSON.parse(localStorage.getItem("js13kgames-jam-2021"));
+	const state = JSON.parse(localStorage.getItem("go-away"));
 
 	if (state == null || forceNew) {
 		saveGame(currentGameState);
@@ -3939,10 +3940,7 @@ const decorateNormalCard = (slot, data, card, icon, amount) => {
 
 	addContent(
 		card.cardContainerElement,
-		`<div class="card">
-				<div class="effect">${amount}</div>
-				${icon}
-			</div>`
+		`<div class="card"><div class="effect">${amount}</div>${icon}</div>`
 	);
 
 	card.cardElement = querySelector(".card", card.cardContainerElement);
@@ -3987,15 +3985,7 @@ class HealthCard {
 	onTurn() {
 		this.turnsBeforeCardExpires -= 1;
 
-		if (this.turnsBeforeCardExpires > 2) {
-			addAnimationToQueue(
-				animationTarget.CARD_TURN,
-				() => {
-					// glowElementInAndOut(this.cardElement, "5px", "#666", 0, 0);
-				},
-				200
-			);
-		} else if (this.turnsBeforeCardExpires <= 0) {
+		if (this.turnsBeforeCardExpires <= 0) {
 			detachElement(this.cardElement);
 			removeCard(this.slot);
 			addCard(this.slot);
@@ -4071,15 +4061,7 @@ class ShieldCard {
 	onTurn() {
 		this.turnsBeforeCardExpires -= 1;
 
-		if (this.turnsBeforeCardExpires > 2) {
-			addAnimationToQueue(
-				animationTarget.CARD_TURN,
-				() => {
-					// glowElementInAndOut(this.cardElement, "5px", "#666", 0, 0);
-				},
-				200
-			);
-		} else if (this.turnsBeforeCardExpires <= 0) {
+		if (this.turnsBeforeCardExpires <= 0) {
 			detachElement(this.cardElement);
 			removeCard(this.slot);
 			addCard(this.slot);
@@ -4155,15 +4137,7 @@ class DamageCard {
 	onTurn() {
 		this.turnsBeforeCardExpires -= 1;
 
-		if (this.turnsBeforeCardExpires > 2) {
-			addAnimationToQueue(
-				animationTarget.CARD_TURN,
-				() => {
-					// glowElementInAndOut(this.cardElement, "5px", "#666", 0, 0);
-				},
-				200
-			);
-		} else if (this.turnsBeforeCardExpires <= 0) {
+		if (this.turnsBeforeCardExpires <= 0) {
 			detachElement(this.cardElement);
 			removeCard(this.slot);
 			addCard(this.slot);

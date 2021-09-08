@@ -36,7 +36,7 @@ module.exports = () => {
 					return done(err);
 				}
 				util.log(util.colors.yellow.bold(`Current game size: ${data.size} bytes`));
-				let percent = parseInt((data.size / 13312) * 100, 10);
+				let percent = parseInt(Math.ceil((data.size / 13312) * 100), 10);
 				util.log(util.colors.yellow.bold(`${percent}% of total game size used`));
 				done();
 			});
