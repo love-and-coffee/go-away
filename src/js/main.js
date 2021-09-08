@@ -3422,11 +3422,7 @@ const backgroundMusic = zzfxM(
 		],
 		[0, 1, 2, 1, 3, 4, 5],
 		,
-		{
-			instruments: ["", "", "", "", "", "", "", ""],
-			patterns: ["", "", "", "", "", "", ""],
-			title: "Untitled song",
-		},
+		,
 	]
 );
 
