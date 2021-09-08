@@ -346,6 +346,11 @@ const initSocial = () => {
 const screenWidth = document.documentElement.clientWidth;
 const screenHeight = document.documentElement.clientHeight;
 
+addContent(
+	document.body,
+	`<div id="root"><div id="background"></div><div id="game-controls"></div><div id="top"><div id="year"></div></div><div id="earth"><div id="stats"><div id="health"></div><div id="shield"></div><div id="damage"></div></div></div><div id="cards"><div class="card-slot"></div><div class="card-slot"></div><div class="card-slot"></div><div class="card-slot"></div><div class="card-slot"></div><div class="card-slot"></div></div></div>`
+);
+
 const rootElement = querySelector("#root");
 const gameControlElement = querySelector("#game-controls", rootElement);
 const backgroundElement = querySelector("#background");
@@ -7298,7 +7303,6 @@ const addCard = (cardIndex) => {
 		}
 
 		if (currentGameState.cards[cardIndex] == null) {
-			console.warn(cardIndex, chance, cardTypes);
 			currentGameState.cards[cardIndex] = new cards[
 				cardTypes[randomIntFromInterval(0, cardTypes.length - 1)].card
 			](cardIndex);
