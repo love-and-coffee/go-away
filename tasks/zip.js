@@ -2,6 +2,7 @@
 
 const gulp = require("gulp");
 const zip = require("gulp-zip");
+const advzip = require("gulp-advzip");
 const rename = require("gulp-rename");
 const util = require("gulp-util");
 const htmlmin = require("gulp-htmlmin");
@@ -16,6 +17,12 @@ module.exports = () => {
 				.pipe(htmlmin({ collapseWhitespace: true, removeAttributeQuotes: true }))
 				.pipe(rename("index.html"))
 				.pipe(zip("game.zip"))
+				.pipe(
+					advzip({
+						optimizationLevel: 4,
+						iterations: 99,
+					})
+				)
 				.pipe(gulp.dest("dist"));
 		})
 	);
