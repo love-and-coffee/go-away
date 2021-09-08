@@ -360,13 +360,13 @@ const screenHeight = documentElement.clientHeight;
 
 addContent(
 	document.body,
-	`<div id="root"><div id="background"></div><div id="gc"></div><div id="top"><div id="year"></div></div><div id="earth"><div id="stats"><div id="health"></div><div id="shield"></div><div id="damage"></div></div></div><div id="cards">${'<div class="card-slot"></div>'.repeat(
+	`<div id="root"><div id="background"></div><div id="game-controls"></div><div id="top"><div id="year"></div></div><div id="earth"><div id="stats"><div id="health"></div><div id="shield"></div><div id="damage"></div></div></div><div id="cards">${'<div class="card-slot"></div>'.repeat(
 		6
 	)}</div></div>`
 );
 
 const rootElement = querySelector("#root");
-const gameControlElement = querySelector("#gc", rootElement);
+const gameControlElement = querySelector("#game-controls", rootElement);
 const backgroundElement = querySelector("#background");
 const yearElement = querySelector("#year");
 let yearAmountElement;
@@ -3899,7 +3899,7 @@ const playCard = (cardIndex) => {
 					`${getSVG(worlds[currentGameState.world].icon)} You defended this world in ${getDuration(
 						currentGameState.worldStartedAt,
 						Date.now()
-					)}!<p>You have now unlocked <b>2x</b> speed!</p>`
+					)}!<p>You unlocked <b>2x</b> speed!</p>`
 				);
 			} else if (gameIsFinished() && currentGameState.gameFinishedAt === null) {
 				currentGameState.gameFinishedAt = Date.now();
@@ -3907,7 +3907,7 @@ const playCard = (cardIndex) => {
 					`${getSVG(worlds[currentGameState.world].icon)} You beat this world in ${getDuration(
 						currentGameState.worldStartedAt,
 						Date.now()
-					)}!<p><b>Congratulations!</b> You have completed the game in ${getDuration(
+					)}!<p><b>Nice!</b> You completed the game in ${getDuration(
 						currentGameState.firstPlayAt,
 						currentGameState.gameFinishedAt
 					)}!</p><p>Join our <a target="_blank" href="https://discord.gg/99ZvC6W3r4">Discord</a>, <a target="_blank" href="https://martintale.com/about-me?ref=go-away#message-me">Message Me</a> directly or <a target="_blank" href="https://ko-fi.com/martintale?ref=go-away">Buy me a Coffee</a>!</p>`
