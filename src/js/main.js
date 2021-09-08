@@ -18,6 +18,15 @@ String.prototype.replaceAt = function (index, char) {
 };
 
 const requestAnimationFrameLocal = requestAnimationFrame;
+const mathRandom = Math.random;
+const mathFloor = Math.floor;
+const mathMin = Math.min;
+const mathMax = Math.max;
+const mathPow = Math.pow;
+const mathAbs = Math.abs;
+const mathPI = Math.PI;
+const mathSin = Math.sin;
+const mathRound = Math.round;
 
 const setStyle = (element, property, value) => {
 	element.style[property] = value;
@@ -52,16 +61,16 @@ const addContent = (target, content) => {
 };
 
 const randomIntFromInterval = (min, max) => {
-	return Math.floor(Math.random() * (max - min + 1) + min);
+	return mathFloor(mathRandom() * (max - min + 1) + min);
 };
 
 const getDuration = (d1, d2) => {
-	let durationInSeconds = Math.floor((d2 - d1) / 1000);
+	let durationInSeconds = mathFloor((d2 - d1) / 1000);
 
-	const hours = Math.floor(durationInSeconds / 60 / 60);
+	const hours = mathFloor(durationInSeconds / 60 / 60);
 	durationInSeconds -= hours * 60 * 60;
 
-	const minutes = Math.floor(durationInSeconds / 60);
+	const minutes = mathFloor(durationInSeconds / 60);
 	durationInSeconds -= minutes * 60;
 
 	if (hours > 0) {
@@ -412,7 +421,7 @@ const animateNumber = (targetElement, from, to, colorClass = null, delay = 0, on
 			}
 		},
 		onprogress(target, progress) {
-			replaceText(target, Math.floor(from + amount * progress).toLocaleString());
+			replaceText(target, mathFloor(from + amount * progress).toLocaleString());
 		},
 		onend(target) {
 			replaceText(target, to.toLocaleString());
@@ -709,8 +718,8 @@ const addStarBackground = () => {
 		addContent(backgroundElement, getSVG(svgs.STAR, "#ffffff"));
 	}
 	querySelectorAll("#background svg").forEach((star) => {
-		star.style.left = `${randomIntFromInterval(-5, Math.min(495, screenWidth - 5))}px`;
-		star.style.top = `${randomIntFromInterval(-5, Math.min(695, screenHeight - 5))}px`;
+		star.style.left = `${randomIntFromInterval(-5, mathMin(495, screenWidth - 5))}px`;
+		star.style.top = `${randomIntFromInterval(-5, mathMin(695, screenHeight - 5))}px`;
 		star.style.transform = `rotate(${randomIntFromInterval(0, 360)}deg) scale(${
 			randomIntFromInterval(50, 200) * 0.01
 		})`;
@@ -833,8 +842,8 @@ class Tween {
 	}
 }
 
-const easeInBy = (power) => (t) => Math.pow(t, power);
-const easeOutBy = (power) => (t) => 1 - Math.abs(Math.pow(t - 1, power));
+const easeInBy = (power) => (t) => mathPow(t, power);
+const easeOutBy = (power) => (t) => 1 - mathAbs(mathPow(t - 1, power));
 const easeInOutBy = (power) => (t) =>
 	t < 0.5 ? easeInBy(power)(t * 2) / 2 : easeOutBy(power)(t * 2 - 1) / 2 + 0.5;
 
@@ -852,9 +861,9 @@ const ease = {
 	quintIn: easeInBy(5),
 	quintOut: easeOutBy(5),
 	quintInOut: easeInOutBy(5),
-	sineIn: (t) => 1 + Math.sin((Math.PI / 2) * t - Math.PI / 2),
-	sineOut: (t) => Math.sin((Math.PI / 2) * t),
-	sineInOut: (t) => (1 + Math.sin(Math.PI * t - Math.PI / 2)) / 2,
+	sineIn: (t) => 1 + mathSin((mathPI / 2) * t - mathPI / 2),
+	sineOut: (t) => mathSin((mathPI / 2) * t),
+	sineInOut: (t) => (1 + mathSin(mathPI * t - mathPI / 2)) / 2,
 	bounceOut: (t) => {
 		const s = 7.5625;
 		const p = 2.75;
@@ -1128,10 +1137,10 @@ zzfxG = (
 	m = 0,
 	C = 0
 ) => {
-	let b = 2 * Math.PI,
-		H = (v *= (500 * b) / Math.pow(zzfxR, 2)),
+	let b = 2 * mathPI,
+		H = (v *= (500 * b) / mathPow(zzfxR, 2)),
 		I = ((0 < x ? 1 : -1) * b) / 4,
-		D = (c *= ((1 + 2 * k * Math.random() - k) * b) / zzfxR),
+		D = (c *= ((1 + 2 * k * mathRandom() - k) * b) / zzfxR),
 		Z = [],
 		g = 0,
 		E = 0,
@@ -1147,7 +1156,7 @@ zzfxG = (
 	t *= zzfxR;
 	u *= zzfxR;
 	d *= zzfxR;
-	z *= (500 * b) / Math.pow(zzfxR, 3);
+	z *= (500 * b) / mathPow(zzfxR, 3);
 	x *= b / zzfxR;
 	w *= b / zzfxR;
 	A *= zzfxR;
@@ -1158,15 +1167,15 @@ zzfxG = (
 				? 1 < r
 					? 2 < r
 						? 3 < r
-							? Math.sin(Math.pow(g % b, 3))
-							: Math.max(Math.min(Math.tan(g), 1), -1)
+							? mathSin(mathPow(g % b, 3))
+							: mathMax(mathMin(Math.tan(g), 1), -1)
 						: 1 - (((((2 * g) / b) % 2) + 2) % 2)
-					: 1 - 4 * Math.abs(Math.round(g / b) - g / b)
-				: Math.sin(g)),
+					: 1 - 4 * mathAbs(mathRound(g / b) - g / b)
+				: mathSin(g)),
 			(f =
-				(l ? 1 - C + C * Math.sin((2 * Math.PI * a) / l) : 1) *
+				(l ? 1 - C + C * mathSin((2 * mathPI * a) / l) : 1) *
 				(0 < f ? 1 : -1) *
-				Math.pow(Math.abs(f), F) *
+				mathPow(mathAbs(f), F) *
 				q *
 				zzfxV *
 				(a < e
@@ -1179,9 +1188,9 @@ zzfxG = (
 					? ((h - a - d) / u) * y
 					: 0)),
 			(f = d ? f / 2 + (d > a ? 0 : ((a < h - d ? 1 : (h - a) / d) * Z[(a - d) | 0]) / 2) : f)),
-			(p = (c += v += z) * Math.sin(E * x - I)),
-			(g += p - p * B * (1 - ((1e9 * (Math.sin(a) + 1)) % 2))),
-			(E += p - p * B * (1 - ((1e9 * (Math.pow(Math.sin(a), 2) + 1)) % 2))),
+			(p = (c += v += z) * mathSin(E * x - I)),
+			(g += p - p * B * (1 - ((1e9 * (mathSin(a) + 1)) % 2))),
+			(E += p - p * B * (1 - ((1e9 * (mathPow(mathSin(a), 2) + 1)) % 2))),
 			n && ++n > A && ((c += w), (D += w), (n = 0)),
 			!l || ++J % l || ((c = D), (v = H), (n = n || 1));
 	return Z;
@@ -1239,7 +1248,7 @@ zzfxM = (n, f, t, e = 125) => {
 						(g |= 0) &&
 							(R = v[[(c = x[(M = 0)] || 0), g]] =
 								v[[c, g]] ||
-								((l = [...n[c]]), (l[2] *= Math.pow(2, (g - 12) / 12)), g > 0 ? zzfxG(...l) : [])));
+								((l = [...n[c]]), (l[2] *= mathPow(2, (g - 12) / 12)), g > 0 ? zzfxG(...l) : [])));
 				}
 				m = G;
 			});
@@ -3639,7 +3648,7 @@ const addCard = (cardIndex) => {
 let timeDelayBeforeNextRoundOfAnimations = Date.now();
 
 const playAnimations = () => {
-	let animationDelay = Math.max(0, timeDelayBeforeNextRoundOfAnimations - Date.now());
+	let animationDelay = mathMax(0, timeDelayBeforeNextRoundOfAnimations - Date.now());
 
 	animationQueue
 		.sort((a, b) => {
@@ -3924,29 +3933,34 @@ const playCard = (cardIndex) => {
 // #endregion
 
 // #region - Cards
+const decorateNormalCard = (slot, data, card, icon, amount) => {
+	card.slot = slot;
+	card.played = false;
+
+	Object.assign(card, data);
+
+	card.cardContainerElement = cardSlotElements[slot];
+
+	addContent(
+		card.cardContainerElement,
+		`<div class="card">
+				<div class="effect">${amount}</div>
+				${icon}
+			</div>`
+	);
+
+	card.cardElement = querySelector(".card", card.cardContainerElement);
+
+	checkExpireStatus(card);
+};
+
 class HealthCard {
 	constructor(slot, data) {
-		this.slot = slot;
-		this.played = false;
-		this.health = Math.floor(randomIntFromInterval(10, 20) * (1 + currentGameState.year / 10));
+		this.health = mathFloor(randomIntFromInterval(10, 20) * (1 + currentGameState.year / 10));
 
 		this.turnsBeforeCardExpires = randomIntFromInterval(3, 5);
 
-		Object.assign(this, data);
-
-		this.cardContainerElement = cardSlotElements[slot];
-
-		addContent(
-			this.cardContainerElement,
-			`<div class="card">
-				<div class="effect">${this.health}</div>
-				${getSVG(svgs.HEART)}
-			</div>`
-		);
-
-		this.cardElement = querySelector(".card", this.cardContainerElement);
-
-		checkExpireStatus(this);
+		decorateNormalCard(slot, data, this, getSVG(svgs.HEART), this.health);
 	}
 
 	play() {
@@ -4026,27 +4040,11 @@ class HealthCard {
 
 class ShieldCard {
 	constructor(slot, data) {
-		this.slot = slot;
-		this.played = false;
 		this.shield = 1;
 
 		this.turnsBeforeCardExpires = randomIntFromInterval(2, 4);
 
-		Object.assign(this, data);
-
-		this.cardContainerElement = cardSlotElements[slot];
-
-		addContent(
-			this.cardContainerElement,
-			`<div class="card">
-				<div class="effect">${this.shield}</div>
-				${getSVG(svgs.SHIELD)}
-			</div>`
-		);
-
-		this.cardElement = querySelector(".card", this.cardContainerElement);
-
-		checkExpireStatus(this);
+		decorateNormalCard(slot, data, this, getSVG(svgs.SHIELD), this.shield);
 	}
 
 	play() {
@@ -4126,27 +4124,11 @@ class ShieldCard {
 
 class DamageCard {
 	constructor(slot, data) {
-		this.slot = slot;
-		this.played = false;
-		this.damage = Math.floor(1 + currentGameState.year / 20);
+		this.damage = mathFloor(1 + currentGameState.year / 20);
 
 		this.turnsBeforeCardExpires = randomIntFromInterval(2, 4);
 
-		Object.assign(this, data);
-
-		this.cardContainerElement = cardSlotElements[slot];
-
-		addContent(
-			this.cardContainerElement,
-			`<div class="card">
-				<div class="effect">${this.damage}</div>
-				${getSVG(svgs.SWORD)}
-			</div>`
-		);
-
-		this.cardElement = querySelector(".card", this.cardContainerElement);
-
-		checkExpireStatus(this);
+		decorateNormalCard(slot, data, this, getSVG(svgs.SWORD), this.damage);
 	}
 
 	play() {
@@ -4224,7 +4206,7 @@ class DamageCard {
 	}
 }
 
-class Enemy {
+class EnemyCard {
 	play() {
 		this.played = true;
 
@@ -4350,7 +4332,7 @@ class Enemy {
 	}
 }
 
-const decorateCard = (slot, data, card, icon) => {
+const decorateEnemyCard = (slot, data, card, icon) => {
 	card.slot = slot;
 	card.played = false;
 
@@ -4387,79 +4369,79 @@ const decorateCard = (slot, data, card, icon) => {
 	checkDangerStatus(card);
 };
 
-class AsteroidCard extends Enemy {
+class AsteroidCard extends EnemyCard {
 	constructor(slot, data) {
 		super();
 		this.cardClass = 3;
 
-		this.damage = Math.round(20 * (1 + currentGameState.year / 20));
-		this.turns = Math.max(2, randomIntFromInterval(2, 4) - Math.floor(currentGameState.year / 15));
+		this.damage = mathRound(20 * (1 + currentGameState.year / 20));
+		this.turns = mathMax(2, randomIntFromInterval(2, 4) - mathFloor(currentGameState.year / 15));
 		this.shield = 0;
-		this.health = Math.floor(randomIntFromInterval(1, 2) * (1 + currentGameState.year / 10));
+		this.health = mathFloor(randomIntFromInterval(1, 2) * (1 + currentGameState.year / 10));
 
-		decorateCard(slot, data, this, getSVG(svgs.ASTEROID));
+		decorateEnemyCard(slot, data, this, getSVG(svgs.ASTEROID));
 	}
 }
 
-class AlienCard extends Enemy {
+class AlienCard extends EnemyCard {
 	constructor(slot, data) {
 		super();
 		this.cardClass = 4;
 
-		this.damage = Math.round(100 * (1 + currentGameState.year / 20));
-		this.turns = Math.max(2, randomIntFromInterval(4, 5) - Math.floor(currentGameState.year / 15));
-		this.shield = Math.floor(randomIntFromInterval(0, 1) * (1 + currentGameState.year / 30));
-		this.health = Math.floor(randomIntFromInterval(3, 4) * (1 + currentGameState.year / 10));
+		this.damage = mathRound(100 * (1 + currentGameState.year / 20));
+		this.turns = mathMax(2, randomIntFromInterval(4, 5) - mathFloor(currentGameState.year / 15));
+		this.shield = mathFloor(randomIntFromInterval(0, 1) * (1 + currentGameState.year / 30));
+		this.health = mathFloor(randomIntFromInterval(3, 4) * (1 + currentGameState.year / 10));
 
-		decorateCard(slot, data, this, getSVG(svgs.ALIEN));
+		decorateEnemyCard(slot, data, this, getSVG(svgs.ALIEN));
 	}
 }
 
-class PlanetCard extends Enemy {
+class PlanetCard extends EnemyCard {
 	constructor(slot, data) {
 		super();
 		this.cardClass = 5;
 
-		this.damage = Math.round(50 * (1 + currentGameState.year / 20));
-		this.turns = Math.max(2, randomIntFromInterval(3, 5) - Math.floor(currentGameState.year / 15));
+		this.damage = mathRound(50 * (1 + currentGameState.year / 20));
+		this.turns = mathMax(2, randomIntFromInterval(3, 5) - mathFloor(currentGameState.year / 15));
 		this.shield = 0;
-		this.health = Math.floor(randomIntFromInterval(2, 3) * (1 + currentGameState.year / 10));
+		this.health = mathFloor(randomIntFromInterval(2, 3) * (1 + currentGameState.year / 10));
 
-		decorateCard(slot, data, this, getSVG(svgs.MOON));
+		decorateEnemyCard(slot, data, this, getSVG(svgs.MOON));
 	}
 }
 
-class DeathStarCard extends Enemy {
+class DeathStarCard extends EnemyCard {
 	constructor(slot, data) {
 		super();
 		this.cardClass = 6;
 
-		this.damage = Math.round(250 * (1 + currentGameState.year / 20));
-		this.turns = Math.max(4, randomIntFromInterval(6, 10) - Math.floor(currentGameState.year / 15));
-		this.shield = Math.min(
+		this.damage = mathRound(250 * (1 + currentGameState.year / 20));
+		this.turns = mathMax(4, randomIntFromInterval(6, 10) - mathFloor(currentGameState.year / 15));
+		this.shield = mathMin(
 			this.turns - 1,
-			Math.floor(randomIntFromInterval(2, 4) * (1 + currentGameState.year / 30))
+			mathFloor(randomIntFromInterval(2, 4) * (1 + currentGameState.year / 30))
 		);
 		this.health = 1;
 
-		decorateCard(slot, data, this, getSVG(svgs.DEATH_STAR));
+		decorateEnemyCard(slot, data, this, getSVG(svgs.DEATH_STAR));
 	}
 }
 
-class EarthCard extends Enemy {
+class EarthCard extends EnemyCard {
 	constructor(slot, data) {
 		super();
 		this.cardClass = 7;
 
-		this.damage = Math.round(250 * (1 + currentGameState.year / 20));
-		this.turns = Math.max(4, randomIntFromInterval(6, 10) - Math.floor(currentGameState.year / 15));
-		this.shield = Math.min(
+		this.damage = mathRound(250 * (1 + currentGameState.year / 20));
+		this.turns = mathMax(4, randomIntFromInterval(6, 10) - mathFloor(currentGameState.year / 15));
+		this.shield = mathMin(
 			this.turns - 1,
-			Math.floor(randomIntFromInterval(2, 4) * (1 + currentGameState.year / 30))
+			mathFloor(randomIntFromInterval(2, 4) * (1 + currentGameState.year / 30))
 		);
 		this.health = 1;
 
-		decorateCard(slot, data, this, getSVG(svgs.EARTH));
+		decorateEnemyCard(slot, data, this, getSVG(svgs.EARTH));
 	}
 }
 // #endregion
@@ -4646,7 +4628,7 @@ const showTutorial = (delay = 0) => {
 };
 
 const setup = () => {
-	loadGame();
+	loadGame(true);
 
 	if (currentGameState.soundOn !== null) {
 		showTutorial();
