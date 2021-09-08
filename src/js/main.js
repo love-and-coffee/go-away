@@ -4624,7 +4624,7 @@ const showTutorial = (delay = 0) => {
 };
 
 const setup = () => {
-	loadGame(true);
+	loadGame();
 
 	if (currentGameState.soundOn !== null) {
 		showTutorial();
