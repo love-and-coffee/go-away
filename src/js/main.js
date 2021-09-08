@@ -7908,568 +7908,215 @@ class DamageCard {
 	}
 }
 
-class AsteroidCard {
+class Enemy {
+	play() {
+		this.played = true;
+
+		const oldHealth = this.health;
+		const newHealth = this.health - currentGameState.damage;
+
+		this.health = newHealth;
+
+		if (newHealth > 0) {
+			addAnimationToQueue(
+				animationTarget.PLAY_CARD,
+				() => {
+					playSound(explosionSound);
+					animateNumber(this.healthAmountElement, oldHealth, newHealth, "red");
+					baunceElement(this.cardElement, 20, "top");
+				},
+				900
+			);
+		} else {
+			detachElement(this.cardElement);
+			removeCard(this.slot);
+			addCard(this.slot);
+
+			addAnimationToQueue(
+				animationTarget.PLAY_CARD,
+				() => {
+					playSound(explosionSound);
+					animateNumber(this.healthAmountElement, oldHealth, 0, "red");
+					baunceElement(this.cardElement, 20, "top");
+					zoomUpAndFadeOut(this.cardElement, 500, () => {
+						this.cardElement.remove();
+					});
+				},
+				900
+			);
+		}
+	}
+
+	onTurn() {
+		if (this.turns > 1) {
+			const oldTurns = this.turns;
+			const newTurns = this.turns - 1;
+			this.turns = newTurns;
+
+			addAnimationToQueue(
+				animationTarget.CARD_TURN,
+				() => {
+					playSound(blipSound);
+					animateNumber(this.turnsAmountElement, oldTurns, newTurns, "red");
+					glowElementInAndOut(this.cardElement, "5px", "#f00", 300, 0);
+				},
+				800
+			);
+		} else {
+			if (currentGameState.shield > 0) {
+				const oldShield = currentGameState.shield;
+				const newShield = currentGameState.shield - 1;
+
+				currentGameState.shield = newShield;
+				detachElement(this.cardElement);
+				removeCard(this.slot);
+				addCard(this.slot);
+
+				addAnimationToQueue(
+					animationTarget.CARD_TURN,
+					() => {
+						playSound(rocketLaunchSound);
+						setTimeout(() => {
+							playSound(explosionSound);
+						}, 850);
+						playAndFadeOut(this.cardElement, shieldSvgElement, () => {
+							this.cardElement.remove();
+						}); // 1,650 ms
+						animateNumber(shieldAmountElement, oldShield, newShield, "red", 1150);
+						baunceElement(shieldElement, 5, "top", 1150);
+						glowElementInAndOut(shieldSvgElement, "5px", "#48baff", 200, 1150);
+						glowElementInAndOut(this.cardElement, "5px", "#f00", 0, 0);
+					},
+					1650
+				);
+			} else {
+				const oldHealth = currentGameState.health;
+				const newHealth = currentGameState.health - this.damage;
+
+				currentGameState.health = newHealth;
+				detachElement(this.cardElement);
+				removeCard(this.slot);
+				addCard(this.slot);
+
+				addAnimationToQueue(
+					animationTarget.CARD_TURN,
+					() => {
+						playSound(rocketLaunchSound);
+						setTimeout(() => {
+							playSound(explosionSound);
+						}, 850);
+						playAndFadeOut(this.cardElement, healthSvgElement, () => {
+							this.cardElement.remove();
+						}); // 1,650 ms
+						animateNumber(healthAmountElement, oldHealth, newHealth, "red", 1150);
+						baunceElement(healthElement, 5, "top", 1150);
+						glowElementInAndOut(healthSvgElement, "5px", "#d0021b", 200, 1150);
+						glowElementInAndOut(this.cardElement, "5px", "#f00", 0, 0);
+					},
+					1650
+				);
+			}
+		}
+	}
+
+	onEndTurn() {
+		checkDangerStatus(this);
+	}
+
+	toJSON() {
+		return {
+			class: this.cardClass,
+			health: this.health,
+			turns: this.turns,
+			shield: this.shield,
+			damage: this.damage,
+		};
+	}
+}
+
+const decorateCard = (slot, data, card, icon) => {
+	card.slot = slot;
+	card.played = false;
+
+	Object.assign(card, data);
+
+	card.cardContainerElement = cardSlotElements[slot];
+
+	let stats = `<div class="stats">`;
+	if (card.damage > 0) {
+		stats += `<div class="damage">${getSVG(svgs.SWORD)}<b>${card.damage}</b></div>`;
+	}
+	if (card.turns > 0) {
+		stats += `<div class="turns">${getSVG(svgs.HOURGLASS)}<b>${card.turns}</b></div>`;
+	} else {
+		card.turns = null;
+	}
+	if (card.shield > 0) {
+		stats += `<div class="shield">${getSVG(svgs.SHIELD)}<b>${card.shield}</b></div>`;
+	}
+	if (card.health > 0) {
+		stats += `<div class="health">${getSVG(svgs.HEART)}<b>${card.health}</b></div>`;
+	}
+	stats += `</div>`;
+
+	addContent(card.cardContainerElement, `<div class="card enemy">${stats}${icon}</div>`);
+
+	card.cardElement = querySelector(".card", card.cardContainerElement);
+
+	card.damageAmountElement = querySelector(".damage b", card.cardContainerElement);
+	card.turnsAmountElement = querySelector(".turns b", card.cardContainerElement);
+	card.shieldAmountElement = querySelector(".shield b", card.cardContainerElement);
+	card.healthAmountElement = querySelector(".health b", card.cardContainerElement);
+
+	checkDangerStatus(card);
+};
+
+class AsteroidCard extends Enemy {
 	constructor(slot, data) {
-		this.slot = slot;
-		this.played = false;
+		super();
+		this.cardClass = 3;
 
 		this.damage = Math.round(20 * (1 + currentGameState.year / 20));
 		this.turns = Math.max(2, randomIntFromInterval(2, 4) - Math.floor(currentGameState.year / 15));
 		this.shield = 0;
 		this.health = Math.floor(randomIntFromInterval(1, 2) * (1 + currentGameState.year / 10));
 
-		Object.assign(this, data);
-
-		this.cardContainerElement = cardSlotElements[slot];
-
-		let stats = `<div class="stats">`;
-		if (this.damage > 0) {
-			stats += `<div class="damage">
-				${getSVG(svgs.SWORD)}
-				<b>${this.damage}</b>
-			</div>`;
-		}
-		if (this.turns > 0) {
-			stats += `<div class="turns">
-				${getSVG(svgs.HOURGLASS)}
-				<b>${this.turns}</b>
-			</div>`;
-		} else {
-			this.turns = null;
-		}
-		if (this.shield > 0) {
-			stats += `<div class="shield">
-				${getSVG(svgs.SHIELD)}
-				<b>${this.shield}</b>
-			</div>`;
-		}
-		if (this.health > 0) {
-			stats += `<div class="health">
-				${getSVG(svgs.HEART)}
-				<b>${this.health}</b>
-			</div>`;
-		}
-		stats += `</div>`;
-
-		addContent(
-			this.cardContainerElement,
-			`<div class="card enemy">
-				${stats}
-				${getSVG(svgs.ASTEROID)}
-			</div>`
-		);
-
-		this.cardElement = querySelector(".card", this.cardContainerElement);
-
-		this.damageAmountElement = querySelector(".damage b", this.cardContainerElement);
-		this.turnsAmountElement = querySelector(".turns b", this.cardContainerElement);
-		this.shieldAmountElement = querySelector(".shield b", this.cardContainerElement);
-		this.healthAmountElement = querySelector(".health b", this.cardContainerElement);
-
-		checkDangerStatus(this);
-	}
-
-	play() {
-		this.played = true;
-
-		const oldHealth = this.health;
-		const newHealth = this.health - currentGameState.damage;
-
-		this.health = newHealth;
-
-		if (newHealth > 0) {
-			addAnimationToQueue(
-				animationTarget.PLAY_CARD,
-				() => {
-					playSound(explosionSound);
-					animateNumber(this.healthAmountElement, oldHealth, newHealth, "red");
-					baunceElement(this.cardElement, 20, "top");
-				},
-				900
-			);
-		} else {
-			detachElement(this.cardElement);
-			removeCard(this.slot);
-			addCard(this.slot);
-
-			addAnimationToQueue(
-				animationTarget.PLAY_CARD,
-				() => {
-					playSound(explosionSound);
-					animateNumber(this.healthAmountElement, oldHealth, 0, "red");
-					baunceElement(this.cardElement, 20, "top");
-					zoomUpAndFadeOut(this.cardElement, 500, () => {
-						this.cardElement.remove();
-					});
-				},
-				900
-			);
-		}
-	}
-
-	onTurn() {
-		if (this.turns > 1) {
-			const oldTurns = this.turns;
-			const newTurns = this.turns - 1;
-			this.turns = newTurns;
-
-			addAnimationToQueue(
-				animationTarget.CARD_TURN,
-				() => {
-					playSound(blipSound);
-					animateNumber(this.turnsAmountElement, oldTurns, newTurns, "red");
-					glowElementInAndOut(this.cardElement, "5px", "#f00", 300, 0);
-				},
-				800
-			);
-		} else {
-			if (currentGameState.shield > 0) {
-				const oldShield = currentGameState.shield;
-				const newShield = currentGameState.shield - 1;
-
-				currentGameState.shield = newShield;
-				detachElement(this.cardElement);
-				removeCard(this.slot);
-				addCard(this.slot);
-
-				addAnimationToQueue(
-					animationTarget.CARD_TURN,
-					() => {
-						playSound(rocketLaunchSound);
-						setTimeout(() => {
-							playSound(explosionSound);
-						}, 850);
-						playAndFadeOut(this.cardElement, shieldSvgElement, () => {
-							this.cardElement.remove();
-						}); // 1,650 ms
-						animateNumber(shieldAmountElement, oldShield, newShield, "red", 1150);
-						baunceElement(shieldElement, 5, "top", 1150);
-						glowElementInAndOut(shieldSvgElement, "5px", "#48baff", 200, 1150);
-						glowElementInAndOut(this.cardElement, "5px", "#f00", 0, 0);
-					},
-					1650
-				);
-			} else {
-				const oldHealth = currentGameState.health;
-				const newHealth = currentGameState.health - this.damage;
-
-				currentGameState.health = newHealth;
-				detachElement(this.cardElement);
-				removeCard(this.slot);
-				addCard(this.slot);
-
-				addAnimationToQueue(
-					animationTarget.CARD_TURN,
-					() => {
-						playSound(rocketLaunchSound);
-						setTimeout(() => {
-							playSound(explosionSound);
-						}, 850);
-						playAndFadeOut(this.cardElement, healthSvgElement, () => {
-							this.cardElement.remove();
-						}); // 1,650 ms
-						animateNumber(healthAmountElement, oldHealth, newHealth, "red", 1150);
-						baunceElement(healthElement, 5, "top", 1150);
-						glowElementInAndOut(healthSvgElement, "5px", "#d0021b", 200, 1150);
-						glowElementInAndOut(this.cardElement, "5px", "#f00", 0, 0);
-					},
-					1650
-				);
-			}
-		}
-	}
-
-	onEndTurn() {
-		checkDangerStatus(this);
-	}
-
-	toJSON() {
-		return {
-			class: 3,
-			health: this.health,
-			turns: this.turns,
-			shield: this.shield,
-			damage: this.damage,
-		};
+		decorateCard(slot, data, this, getSVG(svgs.ASTEROID));
 	}
 }
 
-class AlienCard {
+class AlienCard extends Enemy {
 	constructor(slot, data) {
-		this.slot = slot;
-		this.played = false;
+		super();
+		this.cardClass = 4;
 
 		this.damage = Math.round(100 * (1 + currentGameState.year / 20));
 		this.turns = Math.max(2, randomIntFromInterval(4, 5) - Math.floor(currentGameState.year / 15));
 		this.shield = Math.floor(randomIntFromInterval(0, 1) * (1 + currentGameState.year / 30));
 		this.health = Math.floor(randomIntFromInterval(3, 4) * (1 + currentGameState.year / 10));
 
-		Object.assign(this, data);
-
-		this.cardContainerElement = cardSlotElements[slot];
-
-		let stats = `<div class="stats">`;
-		if (this.damage > 0) {
-			stats += `<div class="damage">
-				${getSVG(svgs.SWORD)}
-				<b>${this.damage}</b>
-			</div>`;
-		}
-		if (this.turns > 0) {
-			stats += `<div class="turns">
-				${getSVG(svgs.HOURGLASS)}
-				<b>${this.turns}</b>
-			</div>`;
-		} else {
-			this.turns = null;
-		}
-		if (this.shield > 0) {
-			stats += `<div class="shield">
-				${getSVG(svgs.SHIELD)}
-				<b>${this.shield}</b>
-			</div>`;
-		}
-		if (this.health > 0) {
-			stats += `<div class="health">
-				${getSVG(svgs.HEART)}
-				<b>${this.health}</b>
-			</div>`;
-		}
-		stats += `</div>`;
-
-		addContent(
-			this.cardContainerElement,
-			`<div class="card enemy">
-				${stats}
-				${getSVG(svgs.ALIEN)}
-			</div>`
-		);
-
-		this.cardElement = querySelector(".card", this.cardContainerElement);
-
-		this.damageAmountElement = querySelector(".damage b", this.cardContainerElement);
-		this.turnsAmountElement = querySelector(".turns b", this.cardContainerElement);
-		this.shieldAmountElement = querySelector(".shield b", this.cardContainerElement);
-		this.healthAmountElement = querySelector(".health b", this.cardContainerElement);
-
-		checkDangerStatus(this);
-	}
-
-	play() {
-		this.played = true;
-
-		const oldHealth = this.health;
-		const newHealth = this.health - currentGameState.damage;
-
-		this.health = newHealth;
-
-		if (newHealth > 0) {
-			addAnimationToQueue(
-				animationTarget.PLAY_CARD,
-				() => {
-					playSound(explosionSound);
-					animateNumber(this.healthAmountElement, oldHealth, newHealth, "red");
-					baunceElement(this.cardElement, 20, "top");
-				},
-				900
-			);
-		} else {
-			detachElement(this.cardElement);
-			removeCard(this.slot);
-			addCard(this.slot);
-
-			addAnimationToQueue(
-				animationTarget.PLAY_CARD,
-				() => {
-					playSound(explosionSound);
-					animateNumber(this.healthAmountElement, oldHealth, 0, "red");
-					baunceElement(this.cardElement, 20, "top");
-					zoomUpAndFadeOut(this.cardElement, 500, () => {
-						this.cardElement.remove();
-					});
-				},
-				900
-			);
-		}
-	}
-
-	onTurn() {
-		if (this.turns > 1) {
-			const oldTurns = this.turns;
-			const newTurns = this.turns - 1;
-			this.turns = newTurns;
-
-			addAnimationToQueue(
-				animationTarget.CARD_TURN,
-				() => {
-					playSound(blipSound);
-					animateNumber(this.turnsAmountElement, oldTurns, newTurns, "red");
-					glowElementInAndOut(this.cardElement, "5px", "#f00", 300, 0);
-				},
-				800
-			);
-		} else {
-			if (currentGameState.shield > 0) {
-				const oldShield = currentGameState.shield;
-				const newShield = currentGameState.shield - 1;
-
-				currentGameState.shield = newShield;
-				detachElement(this.cardElement);
-				removeCard(this.slot);
-				addCard(this.slot);
-
-				addAnimationToQueue(
-					animationTarget.CARD_TURN,
-					() => {
-						playSound(rocketLaunchSound);
-						setTimeout(() => {
-							playSound(explosionSound);
-						}, 850);
-						playAndFadeOut(this.cardElement, shieldSvgElement, () => {
-							this.cardElement.remove();
-						}); // 1,650 ms
-						animateNumber(shieldAmountElement, oldShield, newShield, "red", 1150);
-						baunceElement(shieldElement, 5, "top", 1150);
-						glowElementInAndOut(shieldSvgElement, "5px", "#48baff", 200, 1150);
-						glowElementInAndOut(this.cardElement, "5px", "#f00", 0, 0);
-					},
-					1650
-				);
-			} else {
-				const oldHealth = currentGameState.health;
-				const newHealth = currentGameState.health - this.damage;
-
-				currentGameState.health = newHealth;
-				detachElement(this.cardElement);
-				removeCard(this.slot);
-				addCard(this.slot);
-
-				addAnimationToQueue(
-					animationTarget.CARD_TURN,
-					() => {
-						playSound(rocketLaunchSound);
-						setTimeout(() => {
-							playSound(explosionSound);
-						}, 850);
-						playAndFadeOut(this.cardElement, healthSvgElement, () => {
-							this.cardElement.remove();
-						}); // 1,650 ms
-						animateNumber(healthAmountElement, oldHealth, newHealth, "red", 1150);
-						baunceElement(healthElement, 5, "top", 1150);
-						glowElementInAndOut(healthSvgElement, "5px", "#d0021b", 200, 1150);
-						glowElementInAndOut(this.cardElement, "5px", "#f00", 0, 0);
-					},
-					1650
-				);
-			}
-		}
-	}
-
-	onEndTurn() {
-		checkDangerStatus(this);
-	}
-
-	toJSON() {
-		return {
-			class: 4,
-			health: this.health,
-			turns: this.turns,
-			shield: this.shield,
-			damage: this.damage,
-		};
+		decorateCard(slot, data, this, getSVG(svgs.ALIEN));
 	}
 }
 
-class PlanetCard {
+class PlanetCard extends Enemy {
 	constructor(slot, data) {
-		this.slot = slot;
-		this.played = false;
+		super();
+		this.cardClass = 5;
 
 		this.damage = Math.round(50 * (1 + currentGameState.year / 20));
 		this.turns = Math.max(2, randomIntFromInterval(3, 5) - Math.floor(currentGameState.year / 15));
 		this.shield = 0;
 		this.health = Math.floor(randomIntFromInterval(2, 3) * (1 + currentGameState.year / 10));
 
-		Object.assign(this, data);
-
-		this.cardContainerElement = cardSlotElements[slot];
-
-		let stats = `<div class="stats">`;
-		if (this.damage > 0) {
-			stats += `<div class="damage">
-				${getSVG(svgs.SWORD)}
-				<b>${this.damage}</b>
-			</div>`;
-		}
-		if (this.turns > 0) {
-			stats += `<div class="turns">
-				${getSVG(svgs.HOURGLASS)}
-				<b>${this.turns}</b>
-			</div>`;
-		} else {
-			this.turns = null;
-		}
-		if (this.shield > 0) {
-			stats += `<div class="shield">
-				${getSVG(svgs.SHIELD)}
-				<b>${this.shield}</b>
-			</div>`;
-		}
-		if (this.health > 0) {
-			stats += `<div class="health">
-				${getSVG(svgs.HEART)}
-				<b>${this.health}</b>
-			</div>`;
-		}
-		stats += `</div>`;
-
-		addContent(
-			this.cardContainerElement,
-			`<div class="card enemy">
-				${stats}
-				${getSVG(svgs.MOON)}
-			</div>`
-		);
-
-		this.cardElement = querySelector(".card", this.cardContainerElement);
-
-		this.damageAmountElement = querySelector(".damage b", this.cardContainerElement);
-		this.turnsAmountElement = querySelector(".turns b", this.cardContainerElement);
-		this.shieldAmountElement = querySelector(".shield b", this.cardContainerElement);
-		this.healthAmountElement = querySelector(".health b", this.cardContainerElement);
-
-		checkDangerStatus(this);
-	}
-
-	play() {
-		this.played = true;
-
-		const oldHealth = this.health;
-		const newHealth = this.health - currentGameState.damage;
-
-		this.health = newHealth;
-
-		if (newHealth > 0) {
-			addAnimationToQueue(
-				animationTarget.PLAY_CARD,
-				() => {
-					playSound(explosionSound);
-					animateNumber(this.healthAmountElement, oldHealth, newHealth, "red");
-					baunceElement(this.cardElement, 20, "top");
-				},
-				900
-			);
-		} else {
-			detachElement(this.cardElement);
-			removeCard(this.slot);
-			addCard(this.slot);
-
-			addAnimationToQueue(
-				animationTarget.PLAY_CARD,
-				() => {
-					playSound(explosionSound);
-					animateNumber(this.healthAmountElement, oldHealth, 0, "red");
-					baunceElement(this.cardElement, 20, "top");
-					zoomUpAndFadeOut(this.cardElement, 500, () => {
-						this.cardElement.remove();
-					});
-				},
-				900
-			);
-		}
-	}
-
-	onTurn() {
-		if (this.turns > 1) {
-			const oldTurns = this.turns;
-			const newTurns = this.turns - 1;
-			this.turns = newTurns;
-
-			addAnimationToQueue(
-				animationTarget.CARD_TURN,
-				() => {
-					playSound(blipSound);
-					animateNumber(this.turnsAmountElement, oldTurns, newTurns, "red");
-					glowElementInAndOut(this.cardElement, "5px", "#f00", 300, 0);
-				},
-				800
-			);
-		} else {
-			if (currentGameState.shield > 0) {
-				const oldShield = currentGameState.shield;
-				const newShield = currentGameState.shield - 1;
-
-				currentGameState.shield = newShield;
-				detachElement(this.cardElement);
-				removeCard(this.slot);
-				addCard(this.slot);
-
-				addAnimationToQueue(
-					animationTarget.CARD_TURN,
-					() => {
-						playSound(rocketLaunchSound);
-						setTimeout(() => {
-							playSound(explosionSound);
-						}, 850);
-						playAndFadeOut(this.cardElement, shieldSvgElement, () => {
-							this.cardElement.remove();
-						}); // 1,650 ms
-						animateNumber(shieldAmountElement, oldShield, newShield, "red", 1150);
-						baunceElement(shieldElement, 5, "top", 1150);
-						glowElementInAndOut(shieldSvgElement, "5px", "#48baff", 200, 1150);
-						glowElementInAndOut(this.cardElement, "5px", "#f00", 0, 0);
-					},
-					1650
-				);
-			} else {
-				const oldHealth = currentGameState.health;
-				const newHealth = currentGameState.health - this.damage;
-
-				currentGameState.health = newHealth;
-				detachElement(this.cardElement);
-				removeCard(this.slot);
-				addCard(this.slot);
-
-				addAnimationToQueue(
-					animationTarget.CARD_TURN,
-					() => {
-						playSound(rocketLaunchSound);
-						setTimeout(() => {
-							playSound(explosionSound);
-						}, 850);
-						playAndFadeOut(this.cardElement, healthSvgElement, () => {
-							this.cardElement.remove();
-						}); // 1,650 ms
-						animateNumber(healthAmountElement, oldHealth, newHealth, "red", 1150);
-						baunceElement(healthElement, 5, "top", 1150);
-						glowElementInAndOut(healthSvgElement, "5px", "#d0021b", 200, 1150);
-						glowElementInAndOut(this.cardElement, "5px", "#f00", 0, 0);
-					},
-					1650
-				);
-			}
-		}
-	}
-
-	onEndTurn() {
-		checkDangerStatus(this);
-	}
-
-	toJSON() {
-		return {
-			class: 4,
-			health: this.health,
-			turns: this.turns,
-			shield: this.shield,
-			damage: this.damage,
-		};
+		decorateCard(slot, data, this, getSVG(svgs.MOON));
 	}
 }
 
-class DeathStarCard {
+class DeathStarCard extends Enemy {
 	constructor(slot, data) {
-		this.slot = slot;
-		this.played = false;
+		super();
+		this.cardClass = 6;
 
 		this.damage = Math.round(250 * (1 + currentGameState.year / 20));
 		this.turns = Math.max(4, randomIntFromInterval(6, 10) - Math.floor(currentGameState.year / 15));
@@ -8479,186 +8126,14 @@ class DeathStarCard {
 		);
 		this.health = 1;
 
-		Object.assign(this, data);
-
-		this.cardContainerElement = cardSlotElements[slot];
-
-		let stats = `<div class="stats">`;
-		if (this.damage > 0) {
-			stats += `<div class="damage">
-				${getSVG(svgs.SWORD)}
-				<b>${this.damage}</b>
-			</div>`;
-		}
-		if (this.turns > 0) {
-			stats += `<div class="turns">
-				${getSVG(svgs.HOURGLASS)}
-				<b>${this.turns}</b>
-			</div>`;
-		} else {
-			this.turns = null;
-		}
-		if (this.shield > 0) {
-			stats += `<div class="shield">
-				${getSVG(svgs.SHIELD)}
-				<b>${this.shield}</b>
-			</div>`;
-		}
-		if (this.health > 0) {
-			stats += `<div class="health">
-				${getSVG(svgs.HEART)}
-				<b>${this.health}</b>
-			</div>`;
-		}
-		stats += `</div>`;
-
-		addContent(
-			this.cardContainerElement,
-			`<div class="card enemy">
-				${stats}
-				${getSVG(svgs.DEATH_STAR)}
-			</div>`
-		);
-
-		this.cardElement = querySelector(".card", this.cardContainerElement);
-
-		this.damageAmountElement = querySelector(".damage b", this.cardContainerElement);
-		this.turnsAmountElement = querySelector(".turns b", this.cardContainerElement);
-		this.shieldAmountElement = querySelector(".shield b", this.cardContainerElement);
-		this.healthAmountElement = querySelector(".health b", this.cardContainerElement);
-
-		checkDangerStatus(this);
-	}
-
-	play() {
-		this.played = true;
-
-		const oldHealth = this.health;
-		const newHealth = this.health - currentGameState.damage;
-
-		this.health = newHealth;
-
-		if (newHealth > 0) {
-			addAnimationToQueue(
-				animationTarget.PLAY_CARD,
-				() => {
-					playSound(explosionSound);
-					animateNumber(this.healthAmountElement, oldHealth, newHealth, "red");
-					baunceElement(this.cardElement, 20, "top");
-				},
-				900
-			);
-		} else {
-			detachElement(this.cardElement);
-			removeCard(this.slot);
-			addCard(this.slot);
-
-			addAnimationToQueue(
-				animationTarget.PLAY_CARD,
-				() => {
-					playSound(explosionSound);
-					animateNumber(this.healthAmountElement, oldHealth, 0, "red");
-					baunceElement(this.cardElement, 20, "top");
-					zoomUpAndFadeOut(this.cardElement, 500, () => {
-						this.cardElement.remove();
-					});
-				},
-				900
-			);
-		}
-	}
-
-	onTurn() {
-		if (this.turns > 1) {
-			const oldTurns = this.turns;
-			const newTurns = this.turns - 1;
-			this.turns = newTurns;
-
-			addAnimationToQueue(
-				animationTarget.CARD_TURN,
-				() => {
-					playSound(blipSound);
-					animateNumber(this.turnsAmountElement, oldTurns, newTurns, "red");
-					glowElementInAndOut(this.cardElement, "5px", "#f00", 300, 0);
-				},
-				800
-			);
-		} else {
-			if (currentGameState.shield > 0) {
-				const oldShield = currentGameState.shield;
-				const newShield = currentGameState.shield - 1;
-
-				currentGameState.shield = newShield;
-				detachElement(this.cardElement);
-				removeCard(this.slot);
-				addCard(this.slot);
-
-				addAnimationToQueue(
-					animationTarget.CARD_TURN,
-					() => {
-						playSound(rocketLaunchSound);
-						setTimeout(() => {
-							playSound(explosionSound);
-						}, 850);
-						playAndFadeOut(this.cardElement, shieldSvgElement, () => {
-							this.cardElement.remove();
-						}); // 1,650 ms
-						animateNumber(shieldAmountElement, oldShield, newShield, "red", 1150);
-						baunceElement(shieldElement, 5, "top", 1150);
-						glowElementInAndOut(shieldSvgElement, "5px", "#48baff", 200, 1150);
-						glowElementInAndOut(this.cardElement, "5px", "#f00", 0, 0);
-					},
-					1650
-				);
-			} else {
-				const oldHealth = currentGameState.health;
-				const newHealth = currentGameState.health - this.damage;
-
-				currentGameState.health = newHealth;
-				detachElement(this.cardElement);
-				removeCard(this.slot);
-				addCard(this.slot);
-
-				addAnimationToQueue(
-					animationTarget.CARD_TURN,
-					() => {
-						playSound(rocketLaunchSound);
-						setTimeout(() => {
-							playSound(explosionSound);
-						}, 850);
-						playAndFadeOut(this.cardElement, healthSvgElement, () => {
-							this.cardElement.remove();
-						}); // 1,650 ms
-						animateNumber(healthAmountElement, oldHealth, newHealth, "red", 1150);
-						baunceElement(healthElement, 5, "top", 1150);
-						glowElementInAndOut(healthSvgElement, "5px", "#d0021b", 200, 1150);
-						glowElementInAndOut(this.cardElement, "5px", "#f00", 0, 0);
-					},
-					1650
-				);
-			}
-		}
-	}
-
-	onEndTurn() {
-		checkDangerStatus(this);
-	}
-
-	toJSON() {
-		return {
-			class: 4,
-			health: this.health,
-			turns: this.turns,
-			shield: this.shield,
-			damage: this.damage,
-		};
+		decorateCard(slot, data, this, getSVG(svgs.DEATH_STAR));
 	}
 }
 
-class EarthCard {
+class EarthCard extends Enemy {
 	constructor(slot, data) {
-		this.slot = slot;
-		this.played = false;
+		super();
+		this.cardClass = 7;
 
 		this.damage = Math.round(250 * (1 + currentGameState.year / 20));
 		this.turns = Math.max(4, randomIntFromInterval(6, 10) - Math.floor(currentGameState.year / 15));
@@ -8668,179 +8143,7 @@ class EarthCard {
 		);
 		this.health = 1;
 
-		Object.assign(this, data);
-
-		this.cardContainerElement = cardSlotElements[slot];
-
-		let stats = `<div class="stats">`;
-		if (this.damage > 0) {
-			stats += `<div class="damage">
-				${getSVG(svgs.SWORD)}
-				<b>${this.damage}</b>
-			</div>`;
-		}
-		if (this.turns > 0) {
-			stats += `<div class="turns">
-				${getSVG(svgs.HOURGLASS)}
-				<b>${this.turns}</b>
-			</div>`;
-		} else {
-			this.turns = null;
-		}
-		if (this.shield > 0) {
-			stats += `<div class="shield">
-				${getSVG(svgs.SHIELD)}
-				<b>${this.shield}</b>
-			</div>`;
-		}
-		if (this.health > 0) {
-			stats += `<div class="health">
-				${getSVG(svgs.HEART)}
-				<b>${this.health}</b>
-			</div>`;
-		}
-		stats += `</div>`;
-
-		addContent(
-			this.cardContainerElement,
-			`<div class="card enemy">
-				${stats}
-				${getSVG(svgs.EARTH)}
-			</div>`
-		);
-
-		this.cardElement = querySelector(".card", this.cardContainerElement);
-
-		this.damageAmountElement = querySelector(".damage b", this.cardContainerElement);
-		this.turnsAmountElement = querySelector(".turns b", this.cardContainerElement);
-		this.shieldAmountElement = querySelector(".shield b", this.cardContainerElement);
-		this.healthAmountElement = querySelector(".health b", this.cardContainerElement);
-
-		checkDangerStatus(this);
-	}
-
-	play() {
-		this.played = true;
-
-		const oldHealth = this.health;
-		const newHealth = this.health - currentGameState.damage;
-
-		this.health = newHealth;
-
-		if (newHealth > 0) {
-			addAnimationToQueue(
-				animationTarget.PLAY_CARD,
-				() => {
-					playSound(explosionSound);
-					animateNumber(this.healthAmountElement, oldHealth, newHealth, "red");
-					baunceElement(this.cardElement, 20, "top");
-				},
-				900
-			);
-		} else {
-			detachElement(this.cardElement);
-			removeCard(this.slot);
-			addCard(this.slot);
-
-			addAnimationToQueue(
-				animationTarget.PLAY_CARD,
-				() => {
-					playSound(explosionSound);
-					animateNumber(this.healthAmountElement, oldHealth, 0, "red");
-					baunceElement(this.cardElement, 20, "top");
-					zoomUpAndFadeOut(this.cardElement, 500, () => {
-						this.cardElement.remove();
-					});
-				},
-				900
-			);
-		}
-	}
-
-	onTurn() {
-		if (this.turns > 1) {
-			const oldTurns = this.turns;
-			const newTurns = this.turns - 1;
-			this.turns = newTurns;
-
-			addAnimationToQueue(
-				animationTarget.CARD_TURN,
-				() => {
-					playSound(blipSound);
-					animateNumber(this.turnsAmountElement, oldTurns, newTurns, "red");
-					glowElementInAndOut(this.cardElement, "5px", "#f00", 300, 0);
-				},
-				800
-			);
-		} else {
-			if (currentGameState.shield > 0) {
-				const oldShield = currentGameState.shield;
-				const newShield = currentGameState.shield - 1;
-
-				currentGameState.shield = newShield;
-				detachElement(this.cardElement);
-				removeCard(this.slot);
-				addCard(this.slot);
-
-				addAnimationToQueue(
-					animationTarget.CARD_TURN,
-					() => {
-						playSound(rocketLaunchSound);
-						setTimeout(() => {
-							playSound(explosionSound);
-						}, 850);
-						playAndFadeOut(this.cardElement, shieldSvgElement, () => {
-							this.cardElement.remove();
-						}); // 1,650 ms
-						animateNumber(shieldAmountElement, oldShield, newShield, "red", 1150);
-						baunceElement(shieldElement, 5, "top", 1150);
-						glowElementInAndOut(shieldSvgElement, "5px", "#48baff", 200, 1150);
-						glowElementInAndOut(this.cardElement, "5px", "#f00", 0, 0);
-					},
-					1650
-				);
-			} else {
-				const oldHealth = currentGameState.health;
-				const newHealth = currentGameState.health - this.damage;
-
-				currentGameState.health = newHealth;
-				detachElement(this.cardElement);
-				removeCard(this.slot);
-				addCard(this.slot);
-
-				addAnimationToQueue(
-					animationTarget.CARD_TURN,
-					() => {
-						playSound(rocketLaunchSound);
-						setTimeout(() => {
-							playSound(explosionSound);
-						}, 850);
-						playAndFadeOut(this.cardElement, healthSvgElement, () => {
-							this.cardElement.remove();
-						}); // 1,650 ms
-						animateNumber(healthAmountElement, oldHealth, newHealth, "red", 1150);
-						baunceElement(healthElement, 5, "top", 1150);
-						glowElementInAndOut(healthSvgElement, "5px", "#d0021b", 200, 1150);
-						glowElementInAndOut(this.cardElement, "5px", "#f00", 0, 0);
-					},
-					1650
-				);
-			}
-		}
-	}
-
-	onEndTurn() {
-		checkDangerStatus(this);
-	}
-
-	toJSON() {
-		return {
-			class: 4,
-			health: this.health,
-			turns: this.turns,
-			shield: this.shield,
-			damage: this.damage,
-		};
+		decorateCard(slot, data, this, getSVG(svgs.EARTH));
 	}
 }
 // #endregion
@@ -9027,7 +8330,7 @@ const showTutorial = (delay = 0) => {
 };
 
 const setup = () => {
-	loadGame();
+	loadGame(true);
 
 	if (currentGameState.soundOn !== null) {
 		showTutorial();
