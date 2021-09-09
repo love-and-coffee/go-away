@@ -4203,38 +4203,55 @@ class EnemyCard {
 	play() {
 		this.played = true;
 
-		const oldHealth = this.health;
-		const newHealth = this.health - currentGameState.damage;
+		if (this.shield > 0) {
+			const oldShield = this.shield;
+			const newShield = this.shield - 1;
 
-		this.health = newHealth;
+			this.shield = newShield;
 
-		if (newHealth > 0) {
 			addAnimationToQueue(
 				animationTarget.PLAY_CARD,
 				() => {
-					playSound(explosionSound);
-					animateNumber(this.healthAmountElement, oldHealth, newHealth, "red");
+					playSound(laserShotSound);
+					animateNumber(this.shieldAmountElement, oldShield, newShield, "red");
 					baunceElement(this.cardElement, 20, "top");
 				},
 				900
 			);
 		} else {
-			detachElement(this.cardElement);
-			removeCard(this.slot);
-			addCard(this.slot);
+			const oldHealth = this.health;
+			const newHealth = this.health - currentGameState.damage;
 
-			addAnimationToQueue(
-				animationTarget.PLAY_CARD,
-				() => {
-					playSound(explosionSound);
-					animateNumber(this.healthAmountElement, oldHealth, 0, "red");
-					baunceElement(this.cardElement, 20, "top");
-					zoomUpAndFadeOut(this.cardElement, 500, () => {
-						this.cardElement.remove();
-					});
-				},
-				900
-			);
+			this.health = newHealth;
+
+			if (newHealth > 0) {
+				addAnimationToQueue(
+					animationTarget.PLAY_CARD,
+					() => {
+						playSound(explosionSound);
+						animateNumber(this.healthAmountElement, oldHealth, newHealth, "red");
+						baunceElement(this.cardElement, 20, "top");
+					},
+					900
+				);
+			} else {
+				detachElement(this.cardElement);
+				removeCard(this.slot);
+				addCard(this.slot);
+
+				addAnimationToQueue(
+					animationTarget.PLAY_CARD,
+					() => {
+						playSound(explosionSound);
+						animateNumber(this.healthAmountElement, oldHealth, 0, "red");
+						baunceElement(this.cardElement, 20, "top");
+						zoomUpAndFadeOut(this.cardElement, 500, () => {
+							this.cardElement.remove();
+						});
+					},
+					900
+				);
+			}
 		}
 	}
 
