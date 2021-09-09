@@ -4,8 +4,8 @@
 
 Defend worlds from asteroids, planets and various other enemies while building up your defenses!
 
-- 4 worlds to defend;
-- 8 cards to use or destroy;
+- 4 worlds to defend
+- 8 cards to use or destroy
 
 # Credits
 
