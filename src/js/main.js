@@ -4362,7 +4362,7 @@ class AlienCard extends EnemyCard {
 
 		this.damage = mathRound(100 * (1 + currentGameState.year / 20));
 		this.turns = mathMax(2, randomIntFromInterval(4, 5) - mathFloor(currentGameState.year / 15));
-		this.shield = mathFloor(randomIntFromInterval(0, 1) * (1 + currentGameState.year / 30));
+		this.shield = mathFloor(1 * (currentGameState.year / 30));
 		this.health = mathFloor(randomIntFromInterval(3, 4) * (1 + currentGameState.year / 10));
 
 		decorateEnemyCard(slot, data, this, getSVG(svgs.ALIEN));
@@ -4389,9 +4389,9 @@ class DeathStarCard extends EnemyCard {
 		this.cardClass = 6;
 
 		this.damage = mathRound(250 * (1 + currentGameState.year / 20));
-		this.turns = mathMax(4, randomIntFromInterval(6, 10) - mathFloor(currentGameState.year / 15));
+		this.turns = mathMax(4, randomIntFromInterval(6, 10) - mathFloor(currentGameState.year / 20));
 		this.shield = mathMin(
-			this.turns - 1,
+			this.turns - 2,
 			mathFloor(randomIntFromInterval(2, 4) * (1 + currentGameState.year / 30))
 		);
 		this.health = 1;
@@ -4406,9 +4406,9 @@ class EarthCard extends EnemyCard {
 		this.cardClass = 7;
 
 		this.damage = mathRound(250 * (1 + currentGameState.year / 20));
-		this.turns = mathMax(4, randomIntFromInterval(6, 10) - mathFloor(currentGameState.year / 15));
+		this.turns = mathMax(4, randomIntFromInterval(6, 10) - mathFloor(currentGameState.year / 20));
 		this.shield = mathMin(
-			this.turns - 1,
+			this.turns - 2,
 			mathFloor(randomIntFromInterval(2, 4) * (1 + currentGameState.year / 30))
 		);
 		this.health = 1;
@@ -4526,7 +4526,11 @@ const worlds = [
 				card: 5,
 			},
 			{
-				chance: 2,
+				chance: 1,
+				card: 6,
+			},
+			{
+				chance: 1,
 				card: 7,
 			},
 		],
@@ -4566,7 +4570,7 @@ const worlds = [
 			},
 			{
 				chance: 2,
-				card: 6,
+				card: 7,
 			},
 		],
 	},
