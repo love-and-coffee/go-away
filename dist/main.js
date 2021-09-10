@@ -16,7 +16,7 @@ let currentGameState = {
 };
 
 // #region - CSS
-const css = `html{line-height:1.15;-webkit-text-size-adjust:100%}body,html{margin:0;padding:0}*,::after,::before,:focus{box-sizing:border-box;user-select:none;outline:0}body,p{margin:0}button{font:inherit}*{transition:250ms color}:focus{outline:0!important;box-shadow:none!important;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent!important}body{width:100vw;min-width:100vw;max-width:100vw;height:100vh;min-height:100vh;max-height:100vh;scroll-behavior:smooth;text-rendering:optimizeSpeed;line-height:1.5;font-family:"Comic Sans MS",sans-serif;background:#111;color:#fff;text-shadow:1px 1px 2px #000;display:flex;justify-content:center;align-items:center}#root{display:flex;flex-direction:column;width:100vw;height:100vh;max-width:400px;max-height:700px;min-width:360px;min-height:600px;box-shadow:0 0 25px #222;position:relative;overflow:hidden;justify-content:flex-end;align-items:center}#background{position:absolute;width:100%;height:100%;z-index:-1;background:#111}#background svg{width:10px;height:10px;position:absolute}#top{display:flex;flex-direction:column;align-items:flex-start;background:rgb(0 0 0 / 40%);padding:0 1rem .25rem 0;align-self:flex-start;border-bottom-right-radius:.5rem;position:absolute;top:0;left:0;color:#ccc}#top>div{display:flex;align-items:center}#top>div>svg{width:30px;height:30px;margin:.5rem .5rem .25rem .5rem}#top>div>b{margin-top:4px}#earth{width:100%;display:flex;justify-content:center;align-items:center;flex-direction:column-reverse;margin-bottom:1rem}#earth>svg{width:50%;height:auto;margin-bottom:5px}#earth.moon>svg{filter:grayscale(.75) drop-shadow(0 0 10px #d2c8ac)}#earth.mars>svg{filter:saturate(.75) drop-shadow(0 0 10px #df755f)}#earth.death-star>svg{filter:drop-shadow(0 0 10px #e6e8ed)}#earth>svg *{filter:drop-shadow(0 0 6px rgb(0 0 0 / 75%))}#stats{display:flex;background:rgb(0 0 0 / 40%);border-radius:.5rem;padding:.75rem .5rem .75rem .25rem;color:#ccc}#stats>div{display:flex;align-items:center;padding:0 .5rem;font-size:1.5rem}#stats #damage{padding-left:.35rem}#stats #damage svg{margin-right:0}#stats #shield{padding-left:.45rem}#stats>div>svg{width:40px;height:40px;margin-right:.25rem}#cards{display:flex;width:100%;justify-content:space-evenly;align-items:center;margin-bottom:.5rem;flex-wrap:wrap;text-shadow:0 0 5px #000}#cards .green,.green{color:#8f8}.white{color:#fff}#cards .red,.red{color:red}.card{width:100%;height:100%;display:flex;flex-direction:column-reverse;align-items:center;border:3px solid rgb(0 0 0 / 100%);border-radius:.5rem;padding:.25rem 0;font-size:1.75rem;background:radial-gradient(circle at 50% 80%,rgba(20,20,20,.9) 0,rgba(20,20,20,.9) 20%,rgba(40,40,40,.75) 100%);cursor:pointer;box-shadow:0 2px 10px rgb(0 0 0 / 100%);transition:250ms margin-top,250ms transform;justify-content:space-between}.card .heart-icon{filter:drop-shadow(0 5px 20px rgb(208 2 27 / 40%))}.card .shield-icon{filter:drop-shadow(0 5px 20px rgb(72 186 255 / 60%))}.card .sword-icon{filter:drop-shadow(0 5px 20px rgb(208 2 27 / 90%))}.card .alien-icon{filter:drop-shadow(0 5px 20px rgb(126 211 33 / 10%))}.card-slot{width:104px;height:140px;display:none;margin-bottom:.5rem;opacity:0}.card-slot:nth-child(4),.card-slot:nth-child(5),.card-slot:nth-child(6){margin-bottom:.25rem}.card.enemy{box-shadow:0 2px 15px rgb(255 177 0 / 25%);border:3px dashed rgb(255 177 0 / 25%)}.will-take-damage{animation-duration:3s;animation-name:danger;animation-iteration-count:infinite}.will-die{animation-duration:.5s;animation-name:danger;animation-iteration-count:infinite}.will-expire-in-two-turns{animation-duration:3s;animation-name:expire;animation-iteration-count:infinite}.will-expire-next-turn{animation-duration:750ms;animation-name:expire;animation-iteration-count:infinite}.card.enemy>svg{width:55px}.card>svg{width:60px;margin-top:.5rem;margin-bottom:0}.card svg{filter:drop-shadow(0 1px 5px #000)}.adjust-sign{margin-left:-.5rem}.card .stats{display:flex;justify-content:space-evenly;align-items:center;font-size:1.1rem;width:100%}.card .stats svg{width:25px;height:25px}.card .stats>div{display:flex;justify-content:center;align-items:center;width:33%;flex-direction:column}.effect{margin-bottom:.5rem}.card .stats .damage svg{transform:scale(1.1)}.card .stats .turns svg{transform:scale(.9)}.card .stats .shield svg{transform:scale(1.1)}.card .stats div:nth-last-child(4) svg,.card .stats div:nth-last-child(4)~div svg{width:20px}.card .stats div:nth-last-child(4),.card .stats div:nth-last-child(4)~div{font-size:1rem}.popup-container{position:absolute;width:100%;height:100%;display:flex;justify-content:center;align-items:center;background:rgb(17 17 17 / 95%);opacity:0;z-index:100}.popup{position:absolute;z-index:100;background:#111;border:3px solid rgb(0 0 0 / 44%);border-radius:.5rem;font-size:1.75rem;box-shadow:0 2px 10px rgb(0 0 0);padding:1rem 2rem;text-align:center;color:#ccc;transform:scaleX(0) scaleY(0);max-width:calc(100% - 2rem)}.popup b{color:#ffa74e;white-space:nowrap}.popup button>b{color:#ccc}.popup.world-select button{width:45%;border:0;box-shadow:none;background:0 0;margin:3% 2%;position:relative}.popup.world-select button:hover{box-shadow:none;filter:drop-shadow(0 0 20px #fff)}.popup.world-select button.locked:hover{cursor:not-allowed;filter:none}.popup.world-select button .vip{position:absolute;bottom:25%;left:45%;z-index:10;color:#ff8000;font-size:1.75rem;text-shadow:0 0 7px #000;transform:rotate(-25deg)}.popup.world-select button svg{margin-bottom:-5px}.popup p{font-size:1.2rem;margin-top:.5rem}.popup a{color:#ffa74e;font-weight:700}.popup.full{width:calc(100% - 2rem);height:calc(100% - 2rem);transform:translateY(100vh)}.popup-content{margin-bottom:1rem}.popup-buttons{margin-bottom:.5rem}.popup-buttons button{background:#1b1b1b;outline:0;border:1px solid #4e4e4e;color:#ccc;box-shadow:0 2px 10px rgb(62 62 62);padding:.25rem 1rem;margin:0 .5rem;border-radius:3px;cursor:pointer;font-size:1.25rem;margin-bottom:.5rem}.popup-buttons button:hover{color:#fff;border-color:#888;box-shadow:0 2px 10px rgb(146 146 146)}.popup.lost svg{filter:grayscale(1)}.popup.won.moon svg{filter:grayscale(.75) drop-shadow(0 0 20px #d2c8ac)}.popup.won.mars svg{filter:saturate(.75) drop-shadow(0 0 20px #df755f)}.popup.won.death-star svg{filter:drop-shadow(0 0 20px #e6e8ed)}svg.lock{position:absolute;z-index:15;left:1px;width:100%;height:100%}.popup svg.lock{fill:rgb(0 0 0 / 75%)!important;top:-15%;padding:30%;filter:drop-shadow(0 0 5px #000) blur(1px);pointer-events:none}#game-controls svg.lock{top:0;fill:#fff!important;padding:.5rem;filter:drop-shadow(0 0 5px #000)}#game-controls{position:absolute;top:0;right:0;display:flex;flex-direction:row-reverse;margin-right:.25rem}#game-controls a{border:0;width:35px;height:35px;padding:0;position:absolute;top:50px;filter:grayscale(1);right:10px;transition:filter 250ms}#game-controls a:hover{filter:grayscale(0)}#game-controls a.coffee{top:95px}#game-controls a.near{top:148px;color:#8a8a8a;display:flex;flex-direction:column;align-items:center;line-height:1;font-size:.85rem;text-decoration:none;text-shadow:1px 1px 5px #000}#game-controls a.near span{font-size:.7rem}#game-controls a:hover.near{color:#eee}#game-controls button{background:0 0;border:0;width:45px;height:45px;padding:0;cursor:pointer;margin:.25rem}#game-controls button>svg{fill:#666;padding:.5rem;width:45px}#game-controls button:hover>svg{fill:#ccc}#game-controls #game-speed{width:auto;padding-bottom:.25rem}#game-speed b{color:#666;padding:0 .25rem;font-size:1.25rem;position:relative}#game-speed b .vip{position:absolute;bottom:-10px;left:0;font-size:.65rem;z-index:10;color:#ff8000;text-shadow:0 0 3px #000}#game-speed b.active{color:#ccc}#game-speed:hover b{color:#999}#game-speed:hover b.active{color:#fff}@media (min-width:400px){#cards{margin-bottom:1rem}.card-slot{margin-bottom:1rem}}@keyframes danger{from{box-shadow:0 2px 15px rgb(255 0 0 / 50%);border:3px dashed rgb(208 2 27 / 50%)}50%{box-shadow:0 2px 15px rgb(128 34 34 / 50%);border:3px dashed rgb(95 32 40 / 50%)}to{box-shadow:0 2px 15px rgb(255 0 0 / 50%);border:3px dashed rgb(208 2 27 / 50%)}}@keyframes expire{from{box-shadow:0 2px 15px rgb(100 100 100 / 50%);border:3px solid rgb(100 100 100 / 50%)}50%{box-shadow:0 2px 15px rgb(20 20 20 / 50%);border:3px solid rgb(20 20 20 / 50%)}to{box-shadow:0 2px 15px rgb(100 100 100 / 50%);border:3px solid rgb(100 100 100 / 50%)}}`;
+const css = `html{line-height:1.15;-webkit-text-size-adjust:100%}body,html{margin:0;padding:0}*,::after,::before,:focus{box-sizing:border-box;user-select:none;outline:0}body,p{margin:0}button{font:inherit}*{transition:250ms color}:focus{outline:0!important;box-shadow:none!important;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent!important}body{width:100vw;min-width:100vw;max-width:100vw;height:100vh;min-height:100vh;max-height:100vh;scroll-behavior:smooth;text-rendering:optimizeSpeed;line-height:1.5;font-family:"Comic Sans MS",sans-serif;background:#111;color:#fff;text-shadow:1px 1px 2px #000;display:flex;justify-content:center;align-items:center}#root{display:flex;flex-direction:column;width:100vw;height:100vh;max-width:400px;max-height:700px;min-width:360px;min-height:600px;box-shadow:0 0 25px #222;position:relative;overflow:hidden;justify-content:flex-end;align-items:center}#background{position:absolute;width:100%;height:100%;z-index:-1;background:#111}#background svg{width:10px;height:10px;position:absolute}#top{display:flex;flex-direction:column;align-items:flex-start;background:rgb(0 0 0 / 40%);padding:0 1rem .25rem 0;align-self:flex-start;border-bottom-right-radius:.5rem;position:absolute;top:0;left:0;color:#ccc}#top>div{display:flex;align-items:center}#top>div>svg{width:30px;height:30px;margin:.5rem .5rem .25rem .5rem}#top>div>b{margin-top:4px}#earth{width:100%;display:flex;justify-content:center;align-items:center;flex-direction:column-reverse;margin-bottom:1rem}#earth>svg{width:50%;height:auto;margin-bottom:5px}#earth.moon>svg{filter:grayscale(.75) drop-shadow(0 0 10px #d2c8ac)}#earth.mars>svg{filter:saturate(.75) drop-shadow(0 0 10px #df755f)}#earth.death-star>svg{filter:drop-shadow(0 0 10px #e6e8ed)}#earth>svg *{filter:drop-shadow(0 0 6px rgb(0 0 0 / 75%))}#stats{display:flex;background:rgb(0 0 0 / 40%);border-radius:.5rem;padding:.75rem .5rem .75rem .25rem;color:#ccc}#stats>div{display:flex;align-items:center;padding:0 .5rem;font-size:1.5rem}#stats #damage{padding-left:.35rem}#stats #damage svg{margin-right:0}#stats #shield{padding-left:.45rem}#stats>div>svg{width:40px;height:40px;margin-right:.25rem}#cards{display:flex;width:100%;justify-content:space-evenly;align-items:center;margin-bottom:.5rem;flex-wrap:wrap;text-shadow:0 0 5px #000}#cards .green,.green{color:#8f8}.white{color:#fff}#cards .red,.red{color:red}.card{width:100%;height:100%;display:flex;flex-direction:column-reverse;align-items:center;border:3px solid rgb(0 0 0 / 100%);border-radius:.5rem;padding:.25rem 0;font-size:1.75rem;background:radial-gradient(circle at 50% 80%,rgba(20,20,20,.9) 0,rgba(20,20,20,.9) 20%,rgba(40,40,40,.75) 100%);cursor:pointer;box-shadow:0 2px 10px rgb(0 0 0 / 100%);transition:250ms margin-top,250ms transform;justify-content:space-between}.card .heart-icon{filter:drop-shadow(0 5px 20px rgb(208 2 27 / 40%))}.card .shield-icon{filter:drop-shadow(0 5px 20px rgb(72 186 255 / 60%))}.card .sword-icon{filter:drop-shadow(0 5px 20px rgb(208 2 27 / 90%))}.card .alien-icon{filter:drop-shadow(0 5px 20px rgb(126 211 33 / 10%))}.b0{width:104px;height:140px;display:none;margin-bottom:.5rem;opacity:0}.b0:nth-child(4),.b0:nth-child(5),.b0:nth-child(6){margin-bottom:.25rem}.card.enemy{box-shadow:0 2px 15px rgb(255 177 0 / 25%);border:3px dashed rgb(255 177 0 / 25%)}.a0{animation-duration:3s;animation-name:danger;animation-iteration-count:infinite}.a1{animation-duration:.5s;animation-name:danger;animation-iteration-count:infinite}.a2{animation-duration:3s;animation-name:expire;animation-iteration-count:infinite}.a3{animation-duration:750ms;animation-name:expire;animation-iteration-count:infinite}.card.enemy>svg{width:55px}.card>svg{width:60px;margin-top:.5rem;margin-bottom:0}.card svg{filter:drop-shadow(0 1px 5px #000)}.adjust-sign{margin-left:-.5rem}.card .stats{display:flex;justify-content:space-evenly;align-items:center;font-size:1.1rem;width:100%}.card .stats svg{width:25px;height:25px}.card .stats>div{display:flex;justify-content:center;align-items:center;width:33%;flex-direction:column}.effect{margin-bottom:.5rem}.card .stats .damage svg{transform:scale(1.1)}.card .stats .turns svg{transform:scale(.9)}.card .stats .shield svg{transform:scale(1.1)}.card .stats div:nth-last-child(4) svg,.card .stats div:nth-last-child(4)~div svg{width:20px}.card .stats div:nth-last-child(4),.card .stats div:nth-last-child(4)~div{font-size:1rem}.a4{position:absolute;width:100%;height:100%;display:flex;justify-content:center;align-items:center;background:rgb(17 17 17 / 95%);opacity:0;z-index:100}.popup{position:absolute;z-index:100;background:#111;border:3px solid rgb(0 0 0 / 44%);border-radius:.5rem;font-size:1.75rem;box-shadow:0 2px 10px rgb(0 0 0);padding:1rem 2rem;text-align:center;color:#ccc;transform:scaleX(0) scaleY(0);max-width:calc(100% - 2rem)}.popup b{color:#ffa74e;white-space:nowrap}.popup button>b{color:#ccc}.popup.b4 button{width:45%;border:0;box-shadow:none;background:0 0;margin:3% 2%;position:relative}.popup.b4 button:hover{box-shadow:none;filter:drop-shadow(0 0 20px #fff)}.popup.b4 button.locked:hover{cursor:not-allowed;filter:none}.popup.b4 button .vip{position:absolute;bottom:25%;left:45%;z-index:10;color:#ff8000;font-size:1.75rem;text-shadow:0 0 7px #000;transform:rotate(-25deg)}.popup.b4 button svg{margin-bottom:-5px}.popup p{font-size:1.2rem;margin-top:.5rem}.popup a{color:#ffa74e;font-weight:700}.popup.full{width:calc(100% - 2rem);height:calc(100% - 2rem);transform:translateY(100vh)}.a5{margin-bottom:1rem}.a6{margin-bottom:.5rem}.a6 button{background:#1b1b1b;outline:0;border:1px solid #4e4e4e;color:#ccc;box-shadow:0 2px 10px rgb(62 62 62);padding:.25rem 1rem;margin:0 .5rem;border-radius:3px;cursor:pointer;font-size:1.25rem;margin-bottom:.5rem}.a6 button:hover{color:#fff;border-color:#888;box-shadow:0 2px 10px rgb(146 146 146)}.popup.lost svg{filter:grayscale(1)}.popup.won.moon svg{filter:grayscale(.75) drop-shadow(0 0 20px #d2c8ac)}.popup.won.mars svg{filter:saturate(.75) drop-shadow(0 0 20px #df755f)}.popup.won.death-star svg{filter:drop-shadow(0 0 20px #e6e8ed)}svg.lock{position:absolute;z-index:15;left:1px;width:100%;height:100%}.popup svg.lock{fill:rgb(0 0 0 / 75%)!important;top:-15%;padding:30%;filter:drop-shadow(0 0 5px #000) blur(1px);pointer-events:none}#a9 svg.lock{top:0;fill:#fff!important;padding:.5rem;filter:drop-shadow(0 0 5px #000)}#a9{position:absolute;top:0;right:0;display:flex;flex-direction:row-reverse;margin-right:.25rem}#a9 a{border:0;width:35px;height:35px;padding:0;position:absolute;top:50px;filter:grayscale(1);right:10px;transition:filter 250ms}#a9 a:hover{filter:grayscale(0)}#a9 a.coffee{top:95px}#a9 a.near{top:148px;color:#8a8a8a;display:flex;flex-direction:column;align-items:center;line-height:1;font-size:.85rem;text-decoration:none;text-shadow:1px 1px 5px #000}#a9 a.near span{font-size:.7rem}#a9 a:hover.near{color:#eee}#a9 button{background:0 0;border:0;width:45px;height:45px;padding:0;cursor:pointer;margin:.25rem}#a9 button>svg{fill:#666;padding:.5rem;width:45px}#a9 button:hover>svg{fill:#ccc}#a9 #a8{width:auto;padding-bottom:.25rem}#a8 b{color:#666;padding:0 .25rem;font-size:1.25rem;position:relative}#a8 b .vip{position:absolute;bottom:-10px;left:0;font-size:.65rem;z-index:10;color:#ff8000;text-shadow:0 0 3px #000}#a8 b.active{color:#ccc}#a8:hover b{color:#999}#a8:hover b.active{color:#fff}@media (min-width:400px){#cards{margin-bottom:1rem}.b0{margin-bottom:1rem}}@keyframes danger{from{box-shadow:0 2px 15px rgb(255 0 0 / 50%);border:3px dashed rgb(208 2 27 / 50%)}50%{box-shadow:0 2px 15px rgb(128 34 34 / 50%);border:3px dashed rgb(95 32 40 / 50%)}to{box-shadow:0 2px 15px rgb(255 0 0 / 50%);border:3px dashed rgb(208 2 27 / 50%)}}@keyframes expire{from{box-shadow:0 2px 15px rgb(100 100 100 / 50%);border:3px solid rgb(100 100 100 / 50%)}50%{box-shadow:0 2px 15px rgb(20 20 20 / 50%);border:3px solid rgb(20 20 20 / 50%)}to{box-shadow:0 2px 15px rgb(100 100 100 / 50%);border:3px solid rgb(100 100 100 / 50%)}}`;
 // #endregion
 
 // #region - Random
@@ -178,27 +178,27 @@ const toggleClass = (target, className, val) => {
 
 const checkDangerStatus = (card) => {
 	if (currentGameState.shield > 0) {
-		toggleClass(card.cardElement, "will-take-damage", false);
-		toggleClass(card.cardElement, "will-die", false);
+		toggleClass(card.cardElement, "a0", false);
+		toggleClass(card.cardElement, "a1", false);
 	} else if (currentGameState.health > card.damage) {
-		toggleClass(card.cardElement, "will-take-damage", true);
-		toggleClass(card.cardElement, "will-die", false);
+		toggleClass(card.cardElement, "a0", true);
+		toggleClass(card.cardElement, "a1", false);
 	} else {
-		toggleClass(card.cardElement, "will-take-damage", false);
-		toggleClass(card.cardElement, "will-die", true);
+		toggleClass(card.cardElement, "a0", false);
+		toggleClass(card.cardElement, "a1", true);
 	}
 };
 
 const checkExpireStatus = (card) => {
 	if (card.turnsBeforeCardExpires <= 1) {
-		toggleClass(card.cardElement, "will-expire-in-two-turns", false);
-		toggleClass(card.cardElement, "will-expire-next-turn", true);
+		toggleClass(card.cardElement, "a2", false);
+		toggleClass(card.cardElement, "a3", true);
 	} else if (card.turnsBeforeCardExpires <= 2) {
-		toggleClass(card.cardElement, "will-expire-in-two-turns", true);
-		toggleClass(card.cardElement, "will-expire-next-turn", false);
+		toggleClass(card.cardElement, "a2", true);
+		toggleClass(card.cardElement, "a3", false);
 	} else {
-		toggleClass(card.cardElement, "will-expire-in-two-turns", false);
-		toggleClass(card.cardElement, "will-expire-next-turn", false);
+		toggleClass(card.cardElement, "a2", false);
+		toggleClass(card.cardElement, "a3", false);
 	}
 };
 
@@ -238,7 +238,7 @@ const showPopup = (
 
 	popupClass += " " + additonalClass;
 
-	let popup = `<div id="popup-${popupId}" class="popup-container"><div class="${popupClass}"><div class="popup-content">${content}</div><div class="popup-buttons">`;
+	let popup = `<div id="popup-${popupId}" class="a4"><div class="${popupClass}"><div class="a5">${content}</div><div class="a6">`;
 
 	buttons.forEach((button, buttonIndex) => {
 		let buttonClass = "";
@@ -246,7 +246,7 @@ const showPopup = (
 		if (button.locked) {
 			buttonClass = "locked";
 		}
-		popup += `<button id="popup-${popupId}-button-${buttonIndex}" class="popup-button ${buttonClass}">${button.content}</button>`;
+		popup += `<button id="popup-${popupId}-button-${buttonIndex}" class="a7 ${buttonClass}">${button.content}</button>`;
 	});
 
 	popup += `</div></div></div>`;
@@ -289,7 +289,7 @@ const showPopup = (
 		};
 	}
 
-	querySelectorAll(`#popup-${popupId} .popup-button`).forEach((button, index) => {
+	querySelectorAll(`#popup-${popupId} .a7`).forEach((button, index) => {
 		addEventListener(button, "click", () => {
 			if (button.classList.contains("locked")) {
 				return;
@@ -375,9 +375,9 @@ const changeGameSpeed = () => {
 const initGameSpeed = () => {
 	addContent(
 		gameControlElement,
-		`<button id="game-speed"><b>1x</b><b>2x</b><b>4x <b class="vip">V.I.P.</b></b></button>`
+		`<button id="a8"><b>1x</b><b>2x</b><b>4x <b class="vip">V.I.P.</b></b></button>`
 	);
-	gameSpeedButtonElement = querySelector("#game-speed", gameControlElement);
+	gameSpeedButtonElement = querySelector("#a8", gameControlElement);
 	addEventListener(gameSpeedButtonElement, "click", changeGameSpeed);
 	displayActiveGameSpeed();
 	updateGameSpeedLock();
@@ -388,7 +388,7 @@ const updateGameSpeedLock = () => {
 		currentGameState.hasDoubleSpeedUnlocked === false && currentGameState.isPremium === false;
 	const speed4locked = currentGameState.isPremium === false;
 
-	querySelectorAll("#game-speed > b", gameControlElement).forEach((speedButton, speedIndex) => {
+	querySelectorAll("#a8 > b", gameControlElement).forEach((speedButton, speedIndex) => {
 		if (speedIndex == 1) {
 			toggleClass(speedButton, "locked", speed2locked);
 		}
@@ -430,13 +430,13 @@ const screenHeight = documentElement.clientHeight;
 
 addContent(
 	document.body,
-	`<div id="root"><div id="background"></div><div id="game-controls"></div><div id="top"><div id="year"></div></div><div id="earth"><div id="stats"><div id="health"></div><div id="shield"></div><div id="damage"></div></div></div><div id="cards">${'<div class="card-slot"></div>'.repeat(
+	`<div id="root"><div id="background"></div><div id="a9"></div><div id="top"><div id="year"></div></div><div id="earth"><div id="stats"><div id="health"></div><div id="shield"></div><div id="damage"></div></div></div><div id="cards">${'<div class="b0"></div>'.repeat(
 		6
 	)}</div></div>`
 );
 
 const rootElement = querySelector("#root");
-const gameControlElement = querySelector("#game-controls", rootElement);
+const gameControlElement = querySelector("#a9", rootElement);
 const backgroundElement = querySelector("#background");
 const yearElement = querySelector("#year");
 let yearAmountElement;
@@ -452,7 +452,7 @@ let shieldSvgElement;
 const damageElement = querySelector("#damage");
 let damageAmountElement;
 let damageSvgElement;
-const cardSlotElements = querySelectorAll(".card-slot");
+const cardSlotElements = querySelectorAll(".b0");
 // #endregion
 
 // #region - Animations
@@ -509,7 +509,7 @@ const animateNumber = (targetElement, from, to, colorClass = null, delay = 0, on
 };
 
 // 700 ms
-const baunceElement = (targetElement, height, direction = "top", delay = 0) => {
+const baunceElement = (targetElement, height, delay = 0) => {
 	let fromStart = {
 		y: 0,
 	};
@@ -522,30 +522,6 @@ const baunceElement = (targetElement, height, direction = "top", delay = 0) => {
 	let toEnd = {
 		y: 0,
 	};
-
-	if (direction == "right") {
-		fromStart = {
-			x: 0,
-		};
-		toStart = {
-			x: height,
-		};
-		fromEnd = {
-			x: height,
-		};
-		toEnd = {
-			x: 0,
-		};
-	}
-
-	if (direction == "down") {
-		toStart = {
-			y: height,
-		};
-		fromEnd = {
-			y: height,
-		};
-	}
 
 	tween(targetElement, {
 		delay: delay / currentGameState.gameSpeed,
@@ -804,9 +780,9 @@ const initElements = () => {
 	addStarBackground();
 
 	addContent(yearElement, getSVG(svgs.EARTH));
-	addContent(yearElement, `<b class="current-year"></b>&nbsp;<b class="max-year"></b>`);
-	yearAmountElement = querySelector(".current-year", yearElement);
-	yearMaxElement = querySelector(".max-year", yearElement);
+	addContent(yearElement, `<b class="b1"></b>&nbsp;<b class="b2"></b>`);
+	yearAmountElement = querySelector(".b1", yearElement);
+	yearMaxElement = querySelector(".b2", yearElement);
 	yearSvgElement = querySelector("svg", yearElement);
 
 	addContent(healthElement, getSVG(svgs.HEART));
@@ -1142,7 +1118,7 @@ updatePremiumState = () => {
 
 	saveGame(currentGameState);
 
-	const worldButtons = querySelectorAll(".world-select button");
+	const worldButtons = querySelectorAll(".b4 button");
 
 	if (worldButtons.length > 3) {
 		toggleClass(
@@ -1503,11 +1479,11 @@ const disableSound = () => {
 const initSound = () => {
 	zzfxX.suspend();
 
-	addContent(gameControlElement, `<button id="sound-on">${getSVG(svgs.SOUND_ON)}</button>`);
-	addContent(gameControlElement, `<button id="sound-off">${getSVG(svgs.SOUND_OFF)}</button>`);
+	addContent(gameControlElement, `<button id="b6">${getSVG(svgs.SOUND_ON)}</button>`);
+	addContent(gameControlElement, `<button id="b7">${getSVG(svgs.SOUND_OFF)}</button>`);
 
-	soundOnElement = querySelector("#sound-on", gameControlElement);
-	soundOffElement = querySelector("#sound-off", gameControlElement);
+	soundOnElement = querySelector("#b6", gameControlElement);
+	soundOffElement = querySelector("#b7", gameControlElement);
 
 	if (currentGameState.soundOn === null) {
 		showPopup(
@@ -1726,7 +1702,7 @@ const showWorldSelectScreen = () => {
 		],
 		() => {},
 		true,
-		"world-select"
+		"b4"
 	);
 };
 
@@ -1937,7 +1913,7 @@ class HealthCard {
 					this.cardElement.remove();
 				}); // 1,650 ms
 				animateNumber(healthAmountElement, oldHealth, newHealth, "green", 1150);
-				baunceElement(healthElement, 5, "top", 1150);
+				baunceElement(healthElement, 5, 1150);
 				glowElementInAndOut(healthSvgElement, "5px", "#d0021b", 200, 1150);
 			},
 			1650
@@ -1958,7 +1934,7 @@ class HealthCard {
 					playSound(cardExpiresSound);
 					this.cardElement.style.filter = "grayscale(1)";
 					requestAnimationFrameLocal(() => {
-						baunceElement(this.cardElement, 20, "top");
+						baunceElement(this.cardElement, 20);
 						zoomUpAndFadeOut(this.cardElement, 500, () => {
 							this.cardElement.remove();
 						});
@@ -2014,7 +1990,7 @@ class ShieldCard {
 					this.cardElement.remove();
 				}); // 1,650 ms
 				animateNumber(shieldAmountElement, oldShield, newShield, "green", 1150);
-				baunceElement(shieldElement, 5, "top", 1150);
+				baunceElement(shieldElement, 5, 1150);
 				glowElementInAndOut(shieldSvgElement, "5px", "#48baff", 200, 1150);
 			},
 			1650
@@ -2035,7 +2011,7 @@ class ShieldCard {
 					playSound(cardExpiresSound);
 					this.cardElement.style.filter = "grayscale(1)";
 					requestAnimationFrameLocal(() => {
-						baunceElement(this.cardElement, 20, "top");
+						baunceElement(this.cardElement, 20);
 						zoomUpAndFadeOut(this.cardElement, 500, () => {
 							this.cardElement.remove();
 						});
@@ -2091,7 +2067,7 @@ class DamageCard {
 					this.cardElement.remove();
 				}); // 1,650 ms
 				animateNumber(damageAmountElement, oldDamage, newDamage, "green", 1150);
-				baunceElement(damageElement, 5, "top", 1150);
+				baunceElement(damageElement, 5, 1150);
 				glowElementInAndOut(damageSvgElement, "5px", "#d0021b", 200, 1150);
 			},
 			1650
@@ -2112,7 +2088,7 @@ class DamageCard {
 					playSound(cardExpiresSound);
 					this.cardElement.style.filter = "grayscale(1)";
 					requestAnimationFrameLocal(() => {
-						baunceElement(this.cardElement, 20, "top");
+						baunceElement(this.cardElement, 20);
 						zoomUpAndFadeOut(this.cardElement, 500, () => {
 							this.cardElement.remove();
 						});
@@ -2155,7 +2131,7 @@ class EnemyCard {
 				() => {
 					playSound(laserShotSound);
 					animateNumber(this.shieldAmountElement, oldShield, newShield, "red");
-					baunceElement(this.cardElement, 20, "top");
+					baunceElement(this.cardElement, 20);
 				},
 				900
 			);
@@ -2171,7 +2147,7 @@ class EnemyCard {
 					() => {
 						playSound(explosionSound);
 						animateNumber(this.healthAmountElement, oldHealth, newHealth, "red");
-						baunceElement(this.cardElement, 20, "top");
+						baunceElement(this.cardElement, 20);
 					},
 					900
 				);
@@ -2185,7 +2161,7 @@ class EnemyCard {
 					() => {
 						playSound(explosionSound);
 						animateNumber(this.healthAmountElement, oldHealth, 0, "red");
-						baunceElement(this.cardElement, 20, "top");
+						baunceElement(this.cardElement, 20);
 						zoomUpAndFadeOut(this.cardElement, 500, () => {
 							this.cardElement.remove();
 						});
@@ -2232,7 +2208,7 @@ class EnemyCard {
 							this.cardElement.remove();
 						}); // 1,650 ms
 						animateNumber(shieldAmountElement, oldShield, newShield, "red", 1150);
-						baunceElement(shieldElement, 5, "top", 1150);
+						baunceElement(shieldElement, 5, 1150);
 						glowElementInAndOut(shieldSvgElement, "5px", "#48baff", 200, 1150);
 						glowElementInAndOut(this.cardElement, "5px", "#f00", 0, 0);
 					},
@@ -2258,7 +2234,7 @@ class EnemyCard {
 							this.cardElement.remove();
 						}); // 1,650 ms
 						animateNumber(healthAmountElement, oldHealth, newHealth, "red", 1150);
-						baunceElement(healthElement, 5, "top", 1150);
+						baunceElement(healthElement, 5, 1150);
 						glowElementInAndOut(healthSvgElement, "5px", "#d0021b", 200, 1150);
 						glowElementInAndOut(this.cardElement, "5px", "#f00", 0, 0);
 					},

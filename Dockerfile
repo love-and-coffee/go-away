@@ -7,7 +7,7 @@ RUN apt-get install apache2-utils -y
 RUN apt-get clean
 EXPOSE 80
 CMD ["apache2ctl","-D","FOREGROUND"]
-COPY /dist/index.min.html /var/www/html/index.html
+COPY /final/index.html /var/www/html/index.html
 COPY ./my-httpd.conf /usr/local/apache2/conf/httpd.conf
 
 
