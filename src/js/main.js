@@ -11,7 +11,61 @@ let currentGameState = {
 	soundOn: null,
 	world: 0,
 	gameSpeed: 1,
+	seed: null,
+	seedPosition: 20,
 };
+
+// #region - Random
+/**
+ * Performs a bitwise left circular shift on {x}.
+ * @param  {number} x
+ * @param  {number} k
+ * @return {number}
+ * @private
+ */
+const rot = (x, k) => (x << k) | (x >> (32 - k));
+
+/**
+ * Performs bitwise shuffling on the values in a given context Array to produce
+ * a pseudorandom value.
+ * @param  {Array.<number>} ctx
+ * @return {number}
+ * @private
+ */
+const next = (ctx) => {
+	const e = (ctx[0] - rot(ctx[1], 27)) >>> 0;
+
+	ctx[0] = (ctx[1] ^ rot(ctx[2], 17)) >>> 0;
+	ctx[1] = (ctx[2] + ctx[3]) >>> 0;
+	ctx[2] = (ctx[3] + e) >>> 0;
+	ctx[3] = (e + ctx[0]) >>> 0;
+
+	return ctx[3] / 4294967296.0;
+};
+
+const prng = (s, i) => {
+	const ctx = [0xf1ea5eed, s, s, s];
+
+	for (let n = 0; n < i; n++) {
+		next(ctx);
+	}
+
+	return () => next(ctx);
+};
+
+String.prototype.hashCode = function () {
+	var hash = 0,
+		i,
+		chr;
+	if (this.length === 0) return hash;
+	for (i = 0; i < this.length; i++) {
+		chr = this.charCodeAt(i);
+		hash = (hash << 5) - hash + chr;
+		hash |= 0; // Convert to 32bit integer
+	}
+	return hash;
+};
+// #endregion
 
 // #region - Helpers
 String.prototype.replaceAt = function (index, char) {
@@ -61,8 +115,17 @@ const addContent = (target, content) => {
 	target.insertAdjacentHTML("beforeend", content);
 };
 
+let random = null;
+
 const randomIntFromInterval = (min, max) => {
-	return mathFloor(mathRandom() * (max - min + 1) + min);
+	let randomFloat;
+	if (random !== null) {
+		randomFloat = random();
+	} else {
+		randomFloat = mathRandom();
+	}
+	currentGameState.seedPosition += 1;
+	return mathFloor(randomFloat * (max - min + 1) + min);
 };
 
 const getDuration = (d1, d2) => {
@@ -4651,12 +4714,12 @@ const redirectToNear = (event) => {
 const initNear = () => {
 	window.nearApi
 		.connect({
-			'nodeUrl': "https://rpc.testnet.near.org",
-			'walletUrl': "https://wallet.testnet.near.org",
-			'helperUrl': "https://helper.testnet.near.org",
-			'explorerUrl': "https://explorer.testnet.near.org",
-			'networkId': "testnet",
-			'keyStore': new window.nearApi.keyStores.BrowserLocalStorageKeyStore(),
+			"nodeUrl": "https://rpc.testnet.near.org",
+			"walletUrl": "https://wallet.testnet.near.org",
+			"helperUrl": "https://helper.testnet.near.org",
+			"explorerUrl": "https://explorer.testnet.near.org",
+			"networkId": "testnet",
+			"keyStore": new window.nearApi.keyStores.BrowserLocalStorageKeyStore(),
 		})
 		.then((near) => {
 			wallet = new window.nearApi.WalletConnection(near);
@@ -4671,7 +4734,24 @@ const initNear = () => {
 		});
 };
 
+const initDrand = () => {
+	if (currentGameState.seed == null) {
+		fetch("https://api.drand.sh/public/latest")
+			.then((response) => response.json())
+			.then((data) => {
+				currentGameState.seed = data["randomness"].hashCode();
+				console.log(currentGameState.seed, currentGameState.seedPosition);
+				random = prng(currentGameState.seed, currentGameState.seedPosition);
+				saveGame(currentGameState);
+			});
+	} else {
+		random = prng(currentGameState.seed, currentGameState.seedPosition);
+	}
+};
+
 const setup = () => {
+	initDrand();
+
 	loadGame();
 
 	initNear();
