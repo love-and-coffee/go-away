@@ -4002,7 +4002,7 @@ const playCard = (cardIndex) => {
 					`${getSVG(worlds[currentGameState.world].icon)} You beat this world in ${getDuration(
 						currentGameState.worldStartedAt,
 						Date.now()
-					)}!<p><b>Nice!</b> You completed the game in ${getDuration(
+					)}!<p><b>Nice!</b> You beat the game in ${getDuration(
 						currentGameState.firstPlayAt,
 						currentGameState.gameFinishedAt
 					)}!</p><p>Join our <a target="_blank" href="https://discord.gg/99ZvC6W3r4">Discord</a>, <a target="_blank" href="https://martintale.com/about-me?ref=go-away#message-me">Message Me</a> directly or <a target="_blank" href="https://ko-fi.com/martintale?ref=go-away">Buy me a Coffee</a>!</p>`
