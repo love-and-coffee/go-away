@@ -4736,7 +4736,6 @@ const initDrand = () => {
 			.then((response) => response.json())
 			.then((data) => {
 				currentGameState.seed = data["randomness"].hashCode();
-				console.log(currentGameState.seed, currentGameState.seedPosition);
 				random = prng(currentGameState.seed, currentGameState.seedPosition);
 				saveGame(currentGameState);
 			});
