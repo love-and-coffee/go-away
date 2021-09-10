@@ -4031,11 +4031,9 @@ const playCard = (cardIndex) => {
 // #endregion
 
 // #region - Cards
-const decorateNormalCard = (slot, data, card, icon, amount) => {
+const decorateNormalCard = (slot, card, icon, amount) => {
 	card.slot = slot;
 	card.played = false;
-
-	Object.assign(card, data);
 
 	card.cardContainerElement = cardSlotElements[slot];
 
@@ -4055,7 +4053,8 @@ class HealthCard {
 
 		this.turnsBeforeCardExpires = randomIntFromInterval(3, 5);
 
-		decorateNormalCard(slot, data, this, getSVG(svgs.HEART), this.health);
+		Object.assign(this, data);
+		decorateNormalCard(slot, this, getSVG(svgs.HEART), this.health);
 	}
 
 	play() {
@@ -4131,7 +4130,8 @@ class ShieldCard {
 
 		this.turnsBeforeCardExpires = randomIntFromInterval(2, 4);
 
-		decorateNormalCard(slot, data, this, getSVG(svgs.SHIELD), this.shield);
+		Object.assign(this, data);
+		decorateNormalCard(slot, this, getSVG(svgs.SHIELD), this.shield);
 	}
 
 	play() {
@@ -4207,7 +4207,8 @@ class DamageCard {
 
 		this.turnsBeforeCardExpires = randomIntFromInterval(2, 4);
 
-		decorateNormalCard(slot, data, this, getSVG(svgs.SWORD), this.damage);
+		Object.assign(this, data);
+		decorateNormalCard(slot, this, getSVG(svgs.SWORD), this.damage);
 	}
 
 	play() {
