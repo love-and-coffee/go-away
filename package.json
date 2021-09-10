@@ -1,7 +1,7 @@
 {
-	"name": "js13kgames-jam-2021",
+	"name": "go-away",
 	"version": "0.0.1",
-	"description": "Game for js13kgames jam 2021",
+	"description": "Go Away is a space world defender card game made for js13kgames jam 2021.",
 	"scripts": {
 		"test": "gulp"
 	},

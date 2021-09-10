@@ -1,11 +1,26 @@
-[Go Away](https://martintale.itch.io/go-away) is a space world defender card game made for [js13kgames](https://js13kgames.com/entries/2021?ref=js13kgames-jam-2021) jam.
+[Go Away](https://martintale.itch.io/go-away) is a space world defender card game made for [js13kgames](https://js13kgames.com/entries/2021?ref=go-away) jam 2021.
 
 # Description
 
 Defend worlds from asteroids, planets and various other enemies while building up your defenses!
 
-- 4 worlds to defend
-- 8 cards to use or destroy
+- 4 worlds to defend;
+- 3 power ups to collect;
+- 5 unique enemies to destroy;
+- [Web Monetization](https://webmonetization.org/) using [Coil](https://coil.com/);
+- Decentralization using [NEAR Protocol](https://near.org/), [Drand](https://drand.love/), [Flux](https://www.runonflux.io/), [IPFS](https://ipfs.io/) and [Pinata](https://www.pinata.cloud/)!
+
+# Web Monetization
+
+When web monetization is enabled you will have access to 4x speed in game as well as special 4th world (Death Star) when you have beaten 3rd world (Mars)!
+
+# Decentralization
+
+- Gain access to 4x speed in game as well as special 4th world (Death Star) when you're logged in using [NEAR Protocol](https://near.org/) and beaten 3rd world (Mars)
+- Using [Drand](https://drand.love/) to get initial seed that's used by PRNG algorithm to get random numbers
+- Hosted on [Flux](https://www.runonflux.io/) - https://goaway.app.runonflux.io/
+- Hosted on [IPFS](https://ipfs.io/) - https://ipfs.io/ipfs/QmNZz7FsqXkxBBhjT6vaG5PaKxfCdKsRh2WkCRU5BNFgq6?filename=index.html
+- Hosted on [Pinata](https://www.pinata.cloud/) using IPFS - https://gateway.pinata.cloud/ipfs/QmNZz7FsqXkxBBhjT6vaG5PaKxfCdKsRh2WkCRU5BNFgq6
 
 # Credits
 
@@ -23,5 +38,5 @@ Defend worlds from asteroids, planets and various other enemies while building u
 # Extras
 
 - Join my [discord](https://discord.gg/HBqCfc9) server;
-- or [message me](https://martintale.com/about-me?ref=js13kgames-jam-2021#message-me) directly;
-- or [buy me a coffee](https://ko-fi.com/martintale?ref=js13kgames-jam-2021)!
+- or [message me](https://martintale.com/about-me?ref=go-away#message-me) directly;
+- or [buy me a coffee](https://ko-fi.com/martintale?ref=go-away)!
