@@ -1,9 +1,10 @@
 let currentGameState = {
-	tutorialShown: false,
 	firstPlayAt: Date.now(),
 	gameFinishedAt: null,
 	gameEnded: false,
 	worldStartedAt: Date.now(),
+	webMonetizationEnabled: false,
+	loggedInUsingNear: false,
 	isPremium: false,
 	hasDoubleSpeedUnlocked: false,
 	highestStageUnclocked: 0,
@@ -186,11 +187,12 @@ const showPopup = (
 	addContent(rootElement, popup);
 
 	updateLockIcons();
+	addNearClickEvents();
 
 	const popupContainerElement = querySelector(`#popup-${popupId}`);
 
 	const popupElement = querySelector(".popup", popupContainerElement);
-	popupElement.addEventListener("click", (e) => {
+	addEventListener(popupElement, "click", (e) => {
 		e.stopPropagation();
 	});
 
@@ -221,7 +223,7 @@ const showPopup = (
 	}
 
 	querySelectorAll(`#popup-${popupId} .popup-button`).forEach((button, index) => {
-		button.addEventListener("click", () => {
+		addEventListener(button, "click", () => {
 			if (button.classList.contains("locked")) {
 				return;
 			}
@@ -255,7 +257,7 @@ const showPopup = (
 				from: from,
 				to: to,
 				onend(target) {
-					popupContainerElement.addEventListener("click", () => {
+					addEventListener(popupContainerElement, "click", () => {
 						if (typeof onClose === "function") {
 							onClose();
 						}
@@ -350,6 +352,7 @@ const initSocial = () => {
 			svgs.COFFEE
 		)}</a>`
 	);
+	addContent(gameControlElement, `<a class="near" href="#"><b>NEAR</b><span>LOGIN</span></a>`);
 };
 // #endregion
 
@@ -755,8 +758,14 @@ const initElements = () => {
 	damageSvgElement = querySelector("svg", damageElement);
 
 	cardSlotElements.forEach((cardSlot, cardIndex) => {
-		cardSlot.addEventListener("click", () => playCard(cardIndex));
+		addEventListener(cardSlot, "click", () => playCard(cardIndex));
 	});
+
+	addNearClickEvents();
+};
+
+const addNearClickEvents = () => {
+	querySelectorAll(".near").forEach((near) => (near.onclick = redirectToNear));
 };
 
 const setupWorld = (world) => {
@@ -1057,9 +1066,15 @@ const getSVG = (svg, ...colors) => {
 // #region - Monetization
 const monetization = document.monetization;
 
-updatePremiumState = (isPremium) => {
-	// TODO: Change something in game here!
-	currentGameState.isPremium = isPremium;
+updatePremiumState = () => {
+	if (currentGameState.webMonetizationEnabled || currentGameState.loggedInUsingNear) {
+		currentGameState.isPremium = true;
+	} else {
+		currentGameState.isPremium = false;
+	}
+
+	saveGame(currentGameState);
+
 	const worldButtons = querySelectorAll(".world-select button");
 
 	if (worldButtons.length > 3) {
@@ -1074,10 +1089,12 @@ updatePremiumState = (isPremium) => {
 
 if (monetization) {
 	addEventListener(monetization, "monetizationstart", () => {
-		updatePremiumState(true);
+		currentGameState.webMonetizationEnabled = true;
+		updatePremiumState();
 	});
 	addEventListener(monetization, "monetizationstop", () => {
-		updatePremiumState(false);
+		currentGameState.webMonetizationEnabled = false;
+		updatePremiumState();
 	});
 }
 // #endregion
@@ -3579,13 +3596,11 @@ const initSound = () => {
 					content: "Yes",
 					action: () => {
 						enableSound();
-						showTutorial();
 					},
 				},
 			],
 			() => {
 				disableSound();
-				showTutorial();
 			},
 			false,
 			"",
@@ -3753,7 +3768,7 @@ const openWorld = (world) => {
 
 const showWorldSelectScreen = () => {
 	showPopup(
-		`Select a World<p>Become <b>V.I.P.</b> and unlock <b>4x</b> speed and <b>Death Star</b> world with <a target="_blank" href="https://coil.com/">Coil</a> membership!</p>`,
+		`Select a World<p>Become <b>V.I.P.</b> and unlock <b>4x</b> speed and <b>Death Star</b> world with <a target="_blank" href="https://coil.com/">Coil</a> membership or <a class="near" href="#">NEAR</a> login!</p>`,
 		[
 			{
 				content: getSVG(svgs.MOON) + "<b>Moon</b>",
@@ -4623,30 +4638,43 @@ const updateLockIcons = () => {
 	});
 };
 
-const showTutorial = (delay = 0) => {
-	if (currentGameState.tutorialShown === false) {
-		showPopup(
-			`Tutorial!<p>Pick a card to either collect a power-up, or attack an enemy</p>`,
-			[
-				{
-					content: "Thanks...",
-					action: () => {
-						currentGameState.tutorialShown = true;
-						saveGame(currentGameState);
-					},
-				},
-			],
-			() => {}
-		);
+let wallet = null;
+
+const redirectToNear = (event) => {
+	event.preventDefault();
+	event.stopPropagation();
+	if (wallet !== null) {
+		wallet["requestSignIn"]();
 	}
+};
+
+const initNear = () => {
+	window.nearApi
+		.connect({
+			'nodeUrl': "https://rpc.testnet.near.org",
+			'walletUrl': "https://wallet.testnet.near.org",
+			'helperUrl': "https://helper.testnet.near.org",
+			'explorerUrl': "https://explorer.testnet.near.org",
+			'networkId': "testnet",
+			'keyStore': new window.nearApi.keyStores.BrowserLocalStorageKeyStore(),
+		})
+		.then((near) => {
+			wallet = new window.nearApi.WalletConnection(near);
+
+			if (wallet["isSignedIn"]()) {
+				currentGameState.loggedInUsingNear = true;
+			} else {
+				currentGameState.loggedInUsingNear = false;
+			}
+
+			updatePremiumState();
+		});
 };
 
 const setup = () => {
 	loadGame();
 
-	if (currentGameState.soundOn !== null) {
-		showTutorial();
-	}
+	initNear();
 
 	initSound();
 
