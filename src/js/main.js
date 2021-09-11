@@ -1173,13 +1173,19 @@ zzfx = (...t) => zzfxP(zzfxG(...t));
 
 // zzfxP() - the sound player -- returns a AudioBufferSourceNode
 zzfxP = (...t) => {
-	let e = zzfxX.createBufferSource(),
-		f = zzfxX.createBuffer(t.length, t[0].length, zzfxR);
-	t.map((d, i) => f.getChannelData(i).set(d)),
-		(e.buffer = f),
-		e.connect(zzfxX.destination),
-		e.start();
-	return e;
+	if (typeof zzfxX === 'undefined') {
+		setTimeout(() => {
+			zzfxP(...t);
+		});
+	} else {
+		let e = zzfxX.createBufferSource(),
+			f = zzfxX.createBuffer(t.length, t[0].length, zzfxR);
+		t.map((d, i) => f.getChannelData(i).set(d)),
+			(e.buffer = f),
+			e.connect(zzfxX.destination),
+			e.start();
+		return e;
+	}
 };
 
 // zzfxG() - the sound generator -- returns an array of sample data
@@ -1330,7 +1336,7 @@ zzfxV = 0.3;
 zzfxR = 44100;
 
 // zzfxX - the common audio context
-zzfxX = new (top.AudioContext || webkitAudioContext)();
+zzfxX;
 
 const backgroundMusic = zzfxM(
 	...[
@@ -1465,6 +1471,12 @@ let soundOnElement;
 let soundOffElement;
 
 const enableSound = () => {
+	if (typeof zzfxX === 'undefined') {
+		zzfxX = new (top.AudioContext || webkitAudioContext)();
+
+		const backgroundMusicPlayer = zzfxP(...backgroundMusic);
+		backgroundMusicPlayer.loop = true;
+	}
 	zzfxX.resume();
 	currentGameState.soundOn = true;
 	saveGame(currentGameState);
@@ -1473,6 +1485,12 @@ const enableSound = () => {
 };
 
 const disableSound = () => {
+	if (typeof zzfxX === 'undefined') {
+		zzfxX = new (top.AudioContext || webkitAudioContext)();
+
+		const backgroundMusicPlayer = zzfxP(...backgroundMusic);
+		backgroundMusicPlayer.loop = true;
+	}
 	zzfxX.suspend();
 	currentGameState.soundOn = false;
 	saveGame(currentGameState);
@@ -1481,7 +1499,15 @@ const disableSound = () => {
 };
 
 const initSound = () => {
-	zzfxX.suspend();
+	addEventListener(document, "click", function startInitialSound() {
+		if (currentGameState.soundOn === true) {
+			enableSound();
+		} else {
+			disableSound();
+		}
+
+		removeEventListener(document, "click", startInitialSound);
+	});
 
 	addContent(gameControlElement, `<button id="b6">${getSVG(svgs.SOUND_ON)}</button>`);
 	addContent(gameControlElement, `<button id="b7">${getSVG(svgs.SOUND_OFF)}</button>`);
@@ -1511,19 +1537,14 @@ const initSound = () => {
 			"",
 			500
 		);
+		setStyle(soundOnElement, "display", "none");
+		setStyle(soundOffElement, "display", "block");
 	} else if (currentGameState.soundOn === true) {
-		addEventListener(document, "click", function startInitialSound() {
-			zzfxX.resume();
-			removeEventListener(document, "click", startInitialSound);
-		});
+		setStyle(soundOffElement, "display", "none");
+		setStyle(soundOnElement, "display", "block");
 	} else {
-		disableSound();
-	}
-
-	if (currentGameState.soundOn === true) {
-		enableSound();
-	} else {
-		disableSound();
+		setStyle(soundOnElement, "display", "none");
+		setStyle(soundOffElement, "display", "block");
 	}
 
 	addEventListener(soundOnElement, "click", () => {
@@ -2605,9 +2626,6 @@ const setup = () => {
 	initGameSpeed();
 
 	initSocial();
-
-	const backgroundMusicPlayer = zzfxP(...backgroundMusic);
-	backgroundMusicPlayer.loop = true;
 
 	initElements();
 
