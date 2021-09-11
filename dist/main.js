@@ -1326,7 +1326,7 @@ zzfxV = 0.3;
 zzfxR = 44100;
 
 // zzfxX - the common audio context
-zzfxX = new (top.AudioContext || webkitAudioContext)();
+zzfxX = new (AudioContext || webkitAudioContext)();
 
 const backgroundMusic = zzfxM(
 	...[
