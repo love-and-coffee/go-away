@@ -17,7 +17,7 @@ When web monetization is enabled you will have access to 4x speed in game as wel
 # Decentralization
 
 - Gain access to 4x speed in game as well as special 4th world (Death Star) when you're logged in using [NEAR Protocol](https://near.org/) and beaten 3rd world (Mars)
-- Using [Drand](https://drand.love/) to get initial seed that's used by PRNG algorithm to get random numbers
+- Using [Drand](https://drand.love/) to get initial seed that's used by PRNG algorithm to get random numbers used in card and other game element generation
 - Hosted on [Flux](https://www.runonflux.io/) - https://goaway.app.runonflux.io/
 - Hosted on [IPFS](https://ipfs.io/) - https://ipfs.io/ipfs/QmNZz7FsqXkxBBhjT6vaG5PaKxfCdKsRh2WkCRU5BNFgq6?filename=index.html
 - Hosted on [Pinata](https://www.pinata.cloud/) using IPFS - https://gateway.pinata.cloud/ipfs/QmNZz7FsqXkxBBhjT6vaG5PaKxfCdKsRh2WkCRU5BNFgq6
