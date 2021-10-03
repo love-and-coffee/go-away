@@ -3761,6 +3761,7 @@ const nextYear = () => {
 		() => {
 			animateNumber(yearAmountElement, oldYear, newYear);
 			glowElementInAndOut(yearSvgElement, '5px', '#48baff', 300);
+			cardIsPlaying = false;
 		},
 		700
 	);
@@ -3932,7 +3933,13 @@ const showResultScreen = (message) => {
 	);
 };
 
+let cardIsPlaying = false;
+
 const playCard = (cardIndex) => {
+	if (cardIsPlaying) {
+		return;
+	}
+
 	if (playerHasLost()) {
 		return;
 	}
@@ -3942,6 +3949,8 @@ const playCard = (cardIndex) => {
 	}
 
 	if (currentGameState.cards[cardIndex]) {
+		cardIsPlaying = true;
+
 		currentGameState.cards[cardIndex].play();
 
 		currentGameState.cards.forEach((card, index) => {
