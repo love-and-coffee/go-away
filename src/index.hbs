@@ -1,1 +1,26 @@
-<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0"><meta name="monetization" content="$ilp.uphold.com/qwqgDjZYG8KL"></head><body><script src="https://js13kgames.com/src/near-api-js.js"></script>{{#if js}}<script>{{{ js }}}</script>{{else}}<script src='main.js'></script>{{/if}}</body></html>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<meta name="monetization" content="$ilp.uphold.com/qwqgDjZYG8KL">
+
+	{{#if css}}
+	<style>
+		{{{ css }}}
+	</style>
+	{{else}}
+	<link rel="stylesheet" href="main.css">
+	{{/if}}
+</head>
+<body>
+	<script src="https://js13kgames.com/src/near-api-js.js"></script>
+	{{#if js}}
+	<script>
+		{{{ js }}}
+	</script>
+	{{else}}
+	<script src='main.js'></script>
+	{{/if}}
+</body>
+</html>

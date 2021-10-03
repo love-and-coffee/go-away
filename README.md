@@ -40,3 +40,10 @@ When web monetization is enabled you will have access to 4x speed in game as wel
 - Join my [discord](https://discord.gg/HBqCfc9) server;
 - or [message me](https://martintale.com/about-me?ref=go-away#message-me) directly;
 - or [buy me a coffee](https://ko-fi.com/martintale?ref=go-away)!
+
+# Usage
+
+```
+npm install
+npx gulp / npx gulp watch
+```

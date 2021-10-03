@@ -15,10 +15,6 @@ let currentGameState = {
 	seedPosition: 20,
 };
 
-// #region - CSS
-const css = `html{line-height:1.15;-webkit-text-size-adjust:100%}body,html{margin:0;padding:0}*,::after,::before,:focus{box-sizing:border-box;user-select:none;outline:0}body,p{margin:0}button{font:inherit}*{transition:250ms color}:focus{outline:0!important;box-shadow:none!important;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent!important}body{width:100vw;min-width:100vw;max-width:100vw;height:100vh;min-height:100vh;max-height:100vh;scroll-behavior:smooth;text-rendering:optimizeSpeed;line-height:1.5;font-family:"Comic Sans MS",sans-serif;background:#111;color:#fff;text-shadow:1px 1px 2px #000;display:flex;justify-content:center;align-items:center}#root{display:flex;flex-direction:column;width:100vw;height:100vh;max-width:400px;max-height:700px;min-width:360px;min-height:600px;box-shadow:0 0 25px #222;position:relative;overflow:hidden;justify-content:flex-end;align-items:center}#background{position:absolute;width:100%;height:100%;z-index:-1;background:#111}#background svg{width:10px;height:10px;position:absolute}#top{display:flex;flex-direction:column;align-items:flex-start;background:rgb(0 0 0 / 40%);padding:0 1rem .25rem 0;align-self:flex-start;border-bottom-right-radius:.5rem;position:absolute;top:0;left:0;color:#ccc}#top>div{display:flex;align-items:center}#top>div>svg{width:30px;height:30px;margin:.5rem .5rem .25rem .5rem}#top>div>b{margin-top:4px}#earth{width:100%;display:flex;justify-content:center;align-items:center;flex-direction:column-reverse;margin-bottom:1rem}#earth>svg{width:50%;height:auto;margin-bottom:5px}#earth.moon>svg{filter:grayscale(.75) drop-shadow(0 0 10px #d2c8ac)}#earth.mars>svg{filter:saturate(.75) drop-shadow(0 0 10px #df755f)}#earth.death-star>svg{filter:drop-shadow(0 0 10px #e6e8ed)}#earth>svg *{filter:drop-shadow(0 0 6px rgb(0 0 0 / 75%))}#stats{display:flex;background:rgb(0 0 0 / 40%);border-radius:.5rem;padding:.75rem .5rem .75rem .25rem;color:#ccc}#stats>div{display:flex;align-items:center;padding:0 .5rem;font-size:1.5rem}#stats #damage{padding-left:.35rem}#stats #damage svg{margin-right:0}#stats #shield{padding-left:.45rem}#stats>div>svg{width:40px;height:40px;margin-right:.25rem}#cards{display:flex;width:100%;justify-content:space-evenly;align-items:center;margin-bottom:.5rem;flex-wrap:wrap;text-shadow:0 0 5px #000}#cards .green,.green{color:#8f8}.white{color:#fff}#cards .red,.red{color:red}.card{width:100%;height:100%;display:flex;flex-direction:column-reverse;align-items:center;border:3px solid rgb(0 0 0 / 100%);border-radius:.5rem;padding:.25rem 0;font-size:1.75rem;background:radial-gradient(circle at 50% 80%,rgba(20,20,20,.9) 0,rgba(20,20,20,.9) 20%,rgba(40,40,40,.75) 100%);cursor:pointer;box-shadow:0 2px 10px rgb(0 0 0 / 100%);transition:250ms margin-top,250ms transform;justify-content:space-between}.card .heart-icon{filter:drop-shadow(0 5px 20px rgb(208 2 27 / 40%))}.card .shield-icon{filter:drop-shadow(0 5px 20px rgb(72 186 255 / 60%))}.card .sword-icon{filter:drop-shadow(0 5px 20px rgb(208 2 27 / 90%))}.card .alien-icon{filter:drop-shadow(0 5px 20px rgb(126 211 33 / 10%))}.b0{width:104px;height:140px;display:none;margin-bottom:.5rem;opacity:0}.b0:nth-child(4),.b0:nth-child(5),.b0:nth-child(6){margin-bottom:.25rem}.card.enemy{box-shadow:0 2px 15px rgb(255 177 0 / 25%);border:3px dashed rgb(255 177 0 / 25%)}.a0{animation-duration:3s;animation-name:danger;animation-iteration-count:infinite}.a1{animation-duration:.5s;animation-name:danger;animation-iteration-count:infinite}.a2{animation-duration:3s;animation-name:expire;animation-iteration-count:infinite}.a3{animation-duration:750ms;animation-name:expire;animation-iteration-count:infinite}.card.enemy>svg{width:55px}.card>svg{width:60px;margin-top:.5rem;margin-bottom:0}.card svg{filter:drop-shadow(0 1px 5px #000)}.adjust-sign{margin-left:-.5rem}.card .stats{display:flex;justify-content:space-evenly;align-items:center;font-size:1.1rem;width:100%}.card .stats svg{width:25px;height:25px}.card .stats>div{display:flex;justify-content:center;align-items:center;width:33%;flex-direction:column}.effect{margin-bottom:.5rem}.card .stats .damage svg{transform:scale(1.1)}.card .stats .turns svg{transform:scale(.9)}.card .stats .shield svg{transform:scale(1.1)}.card .stats div:nth-last-child(4) svg,.card .stats div:nth-last-child(4)~div svg{width:20px}.card .stats div:nth-last-child(4),.card .stats div:nth-last-child(4)~div{font-size:1rem}.a4{position:absolute;width:100%;height:100%;display:flex;justify-content:center;align-items:center;background:rgb(17 17 17 / 95%);opacity:0;z-index:100}.popup{position:absolute;z-index:100;background:#111;border:3px solid rgb(0 0 0 / 44%);border-radius:.5rem;font-size:1.75rem;box-shadow:0 2px 10px rgb(0 0 0);padding:1rem 2rem;text-align:center;color:#ccc;transform:scaleX(0) scaleY(0);max-width:calc(100% - 2rem)}.popup b{color:#ffa74e;white-space:nowrap}.popup button>b{color:#ccc}.popup.b4 button{width:45%;border:0;box-shadow:none;background:0 0;margin:3% 2%;position:relative}.popup.b4 button:hover{box-shadow:none;filter:drop-shadow(0 0 20px #fff)}.popup.b4 button.locked:hover{cursor:not-allowed;filter:none}.popup.b4 button .vip{position:absolute;bottom:25%;left:45%;z-index:10;color:#ff8000;font-size:1.75rem;text-shadow:0 0 7px #000;transform:rotate(-25deg)}.popup.b4 button svg{margin-bottom:-5px}.popup p{font-size:1.2rem;margin-top:.5rem}.popup a{color:#ffa74e;font-weight:700}.popup.full{width:calc(100% - 2rem);height:calc(100% - 2rem);transform:translateY(100vh)}.a5{margin-bottom:1rem}.a6{margin-bottom:.5rem}.a6 button{background:#1b1b1b;outline:0;border:1px solid #4e4e4e;color:#ccc;box-shadow:0 2px 10px rgb(62 62 62);padding:.25rem 1rem;margin:0 .5rem;border-radius:3px;cursor:pointer;font-size:1.25rem;margin-bottom:.5rem}.a6 button:hover{color:#fff;border-color:#888;box-shadow:0 2px 10px rgb(146 146 146)}.popup.lost svg{filter:grayscale(1)}.popup.won.moon svg{filter:grayscale(.75) drop-shadow(0 0 20px #d2c8ac)}.popup.won.mars svg{filter:saturate(.75) drop-shadow(0 0 20px #df755f)}.popup.won.death-star svg{filter:drop-shadow(0 0 20px #e6e8ed)}svg.lock{position:absolute;z-index:15;left:1px;width:100%;height:100%}.popup svg.lock{fill:rgb(0 0 0 / 75%)!important;top:-15%;padding:30%;filter:drop-shadow(0 0 5px #000) blur(1px);pointer-events:none}#a9 svg.lock{top:0;fill:#fff!important;padding:.5rem;filter:drop-shadow(0 0 5px #000)}#a9{position:absolute;top:0;right:0;display:flex;flex-direction:row-reverse;margin-right:.25rem}#a9 a{border:0;width:35px;height:35px;padding:0;position:absolute;top:50px;filter:grayscale(1);right:10px;transition:filter 250ms}#a9 a:hover{filter:grayscale(0)}#a9 a.coffee{top:95px}#a9 a.near{top:148px;color:#8a8a8a;display:flex;flex-direction:column;align-items:center;line-height:1;font-size:.85rem;text-decoration:none;text-shadow:1px 1px 5px #000}#a9 a.near span{font-size:.7rem}#a9 a:hover.near{color:#eee}#a9 button{background:0 0;border:0;width:45px;height:45px;padding:0;cursor:pointer;margin:.25rem}#a9 button>svg{fill:#666;padding:.5rem;width:45px}#a9 button:hover>svg{fill:#ccc}#a9 #a8{width:auto;padding-bottom:.25rem}#a8 b{color:#666;padding:0 .25rem;font-size:1.25rem;position:relative}#a8 b .vip{position:absolute;bottom:-10px;left:0;font-size:.65rem;z-index:10;color:#ff8000;text-shadow:0 0 3px #000}#a8 b.active{color:#ccc}#a8:hover b{color:#999}#a8:hover b.active{color:#fff}@media (min-width:400px){#cards{margin-bottom:1rem}.b0{margin-bottom:1rem}}@keyframes danger{from{box-shadow:0 2px 15px rgb(255 0 0 / 50%);border:3px dashed rgb(208 2 27 / 50%)}50%{box-shadow:0 2px 15px rgb(128 34 34 / 50%);border:3px dashed rgb(95 32 40 / 50%)}to{box-shadow:0 2px 15px rgb(255 0 0 / 50%);border:3px dashed rgb(208 2 27 / 50%)}}@keyframes expire{from{box-shadow:0 2px 15px rgb(100 100 100 / 50%);border:3px solid rgb(100 100 100 / 50%)}50%{box-shadow:0 2px 15px rgb(20 20 20 / 50%);border:3px solid rgb(20 20 20 / 50%)}to{box-shadow:0 2px 15px rgb(100 100 100 / 50%);border:3px solid rgb(100 100 100 / 50%)}}`;
-// #endregion
-
 // #region - Random
 /**
  * Performs a bitwise left circular shift on {x}.
@@ -116,7 +112,7 @@ const replaceText = (target, content) => {
 };
 
 const addContent = (target, content) => {
-	target.insertAdjacentHTML("beforeend", content);
+	target.insertAdjacentHTML('beforeend', content);
 };
 
 let random = null;
@@ -142,23 +138,23 @@ const getDuration = (d1, d2) => {
 	durationInSeconds -= minutes * 60;
 
 	if (hours > 0) {
-		return hours + "h " + minutes + "m " + durationInSeconds + "s";
+		return hours + 'h ' + minutes + 'm ' + durationInSeconds + 's';
 	} else {
-		return minutes + "m " + durationInSeconds + "s";
+		return minutes + 'm ' + durationInSeconds + 's';
 	}
 };
 
 const hexToRgbA = (hex, alpha = 1) => {
 	var c;
 	if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
-		c = hex.substring(1).split("");
+		c = hex.substring(1).split('');
 		if (c.length == 3) {
 			c = [c[0], c[0], c[1], c[1], c[2], c[2]];
 		}
-		c = "0x" + c.join("");
-		return "rgba(" + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") + "," + alpha + ")";
+		c = '0x' + c.join('');
+		return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',' + alpha + ')';
 	}
-	throw new Error("Bad Hex");
+	throw new Error('Bad Hex');
 };
 
 const detachElement = (targetElement) => {
@@ -166,12 +162,12 @@ const detachElement = (targetElement) => {
 
 	rootElement.appendChild(targetElement);
 
-	targetElement.style.position = "fixed";
-	targetElement.style.left = x + "px";
-	targetElement.style.top = y + "px";
-	targetElement.style.width = width + "px";
-	targetElement.style.height = height + "px";
-	targetElement.style.zIndex = "5";
+	targetElement.style.position = 'fixed';
+	targetElement.style.left = x + 'px';
+	targetElement.style.top = y + 'px';
+	targetElement.style.width = width + 'px';
+	targetElement.style.height = height + 'px';
+	targetElement.style.zIndex = '5';
 };
 // #endregion
 
@@ -182,27 +178,27 @@ const toggleClass = (target, className, val) => {
 
 const checkDangerStatus = (card) => {
 	if (currentGameState.shield > 0) {
-		toggleClass(card.cardElement, "a0", false);
-		toggleClass(card.cardElement, "a1", false);
+		toggleClass(card.cardElement, 'will-take-damage', false);
+		toggleClass(card.cardElement, 'will-die', false);
 	} else if (currentGameState.health > card.damage) {
-		toggleClass(card.cardElement, "a0", true);
-		toggleClass(card.cardElement, "a1", false);
+		toggleClass(card.cardElement, 'will-take-damage', true);
+		toggleClass(card.cardElement, 'will-die', false);
 	} else {
-		toggleClass(card.cardElement, "a0", false);
-		toggleClass(card.cardElement, "a1", true);
+		toggleClass(card.cardElement, 'will-take-damage', false);
+		toggleClass(card.cardElement, 'will-die', true);
 	}
 };
 
 const checkExpireStatus = (card) => {
 	if (card.turnsBeforeCardExpires <= 1) {
-		toggleClass(card.cardElement, "a2", false);
-		toggleClass(card.cardElement, "a3", true);
+		toggleClass(card.cardElement, 'will-expire-in-two-turns', false);
+		toggleClass(card.cardElement, 'will-expire-next-turn', true);
 	} else if (card.turnsBeforeCardExpires <= 2) {
-		toggleClass(card.cardElement, "a2", true);
-		toggleClass(card.cardElement, "a3", false);
+		toggleClass(card.cardElement, 'will-expire-in-two-turns', true);
+		toggleClass(card.cardElement, 'will-expire-next-turn', false);
 	} else {
-		toggleClass(card.cardElement, "a2", false);
-		toggleClass(card.cardElement, "a3", false);
+		toggleClass(card.cardElement, 'will-expire-in-two-turns', false);
+		toggleClass(card.cardElement, 'will-expire-next-turn', false);
 	}
 };
 
@@ -230,27 +226,27 @@ const showPopup = (
 	buttons,
 	onClose = null,
 	full = false,
-	additonalClass = "",
+	additonalClass = '',
 	closeDelay = 0
 ) => {
 	popupId += 1;
 
-	let popupClass = "popup";
+	let popupClass = 'popup';
 	if (full) {
-		popupClass += " full";
+		popupClass += ' full';
 	}
 
-	popupClass += " " + additonalClass;
+	popupClass += ' ' + additonalClass;
 
-	let popup = `<div id="popup-${popupId}" class="a4"><div class="${popupClass}"><div class="a5">${content}</div><div class="a6">`;
+	let popup = `<div id="popup-${popupId}" class="popup-container"><div class="${popupClass}"><div class="popup-content">${content}</div><div class="popup-buttons">`;
 
 	buttons.forEach((button, buttonIndex) => {
-		let buttonClass = "";
+		let buttonClass = '';
 
 		if (button.locked) {
-			buttonClass = "locked";
+			buttonClass = 'locked';
 		}
-		popup += `<button id="popup-${popupId}-button-${buttonIndex}" class="a7 ${buttonClass}">${button.content}</button>`;
+		popup += `<button id="popup-${popupId}-button-${buttonIndex}" class="popup-button ${buttonClass}">${button.content}</button>`;
 	});
 
 	popup += `</div></div></div>`;
@@ -262,8 +258,8 @@ const showPopup = (
 
 	const popupContainerElement = querySelector(`#popup-${popupId}`);
 
-	const popupElement = querySelector(".popup", popupContainerElement);
-	addEventListener(popupElement, "click", (e) => {
+	const popupElement = querySelector('.popup', popupContainerElement);
+	addEventListener(popupElement, 'click', (e) => {
 		e.stopPropagation();
 	});
 
@@ -293,13 +289,13 @@ const showPopup = (
 		};
 	}
 
-	querySelectorAll(`#popup-${popupId} .a7`).forEach((button, index) => {
-		addEventListener(button, "click", () => {
-			if (button.classList.contains("locked")) {
+	querySelectorAll(`#popup-${popupId} .popup-button`).forEach((button, index) => {
+		addEventListener(button, 'click', () => {
+			if (button.classList.contains('locked')) {
 				return;
 			}
-			if (buttons[index].action === "close") {
-				if (typeof onClose === "function") {
+			if (buttons[index].action === 'close') {
+				if (typeof onClose === 'function') {
 					onClose();
 				}
 				removePopupContainer(popupContainerElement, speed, closeDelay);
@@ -328,8 +324,8 @@ const showPopup = (
 				from: from,
 				to: to,
 				onend(target) {
-					addEventListener(popupContainerElement, "click", () => {
-						if (typeof onClose === "function") {
+					addEventListener(popupContainerElement, 'click', () => {
+						if (typeof onClose === 'function') {
 							onClose();
 						}
 
@@ -344,17 +340,17 @@ const showPopup = (
 let gameSpeedButtonElement;
 
 const displayActiveGameSpeed = () => {
-	const gameSpeedElements = querySelectorAll("b", gameSpeedButtonElement);
+	const gameSpeedElements = querySelectorAll('b', gameSpeedButtonElement);
 
 	gameSpeedElements.forEach((gameSpeedElement, gameSpeedIndex) => {
 		if (gameSpeedIndex === 0 && currentGameState.gameSpeed === 1) {
-			toggleClass(gameSpeedElement, "active", true);
+			toggleClass(gameSpeedElement, 'active', true);
 		} else if (gameSpeedIndex === 1 && currentGameState.gameSpeed === 2) {
-			toggleClass(gameSpeedElement, "active", true);
+			toggleClass(gameSpeedElement, 'active', true);
 		} else if (gameSpeedIndex === 2 && currentGameState.gameSpeed === 4) {
-			toggleClass(gameSpeedElement, "active", true);
+			toggleClass(gameSpeedElement, 'active', true);
 		} else {
-			toggleClass(gameSpeedElement, "active", false);
+			toggleClass(gameSpeedElement, 'active', false);
 		}
 	});
 };
@@ -379,10 +375,10 @@ const changeGameSpeed = () => {
 const initGameSpeed = () => {
 	addContent(
 		gameControlElement,
-		`<button id="a8"><b>1x</b><b>2x</b><b>4x <b class="vip">V.I.P.</b></b></button>`
+		`<button id="game-speed"><b>1x</b><b>2x</b><b>4x <b class="vip">V.I.P.</b></b></button>`
 	);
-	gameSpeedButtonElement = querySelector("#a8", gameControlElement);
-	addEventListener(gameSpeedButtonElement, "click", changeGameSpeed);
+	gameSpeedButtonElement = querySelector('#game-speed', gameControlElement);
+	addEventListener(gameSpeedButtonElement, 'click', changeGameSpeed);
 	displayActiveGameSpeed();
 	updateGameSpeedLock();
 };
@@ -392,12 +388,12 @@ const updateGameSpeedLock = () => {
 		currentGameState.hasDoubleSpeedUnlocked === false && currentGameState.isPremium === false;
 	const speed4locked = currentGameState.isPremium === false;
 
-	querySelectorAll("#a8 > b", gameControlElement).forEach((speedButton, speedIndex) => {
+	querySelectorAll('#game-speed > b', gameControlElement).forEach((speedButton, speedIndex) => {
 		if (speedIndex == 1) {
-			toggleClass(speedButton, "locked", speed2locked);
+			toggleClass(speedButton, 'locked', speed2locked);
 		}
 		if (speedIndex == 2) {
-			toggleClass(speedButton, "locked", speed4locked);
+			toggleClass(speedButton, 'locked', speed4locked);
 		}
 	});
 
@@ -434,29 +430,29 @@ const screenHeight = documentElement.clientHeight;
 
 addContent(
 	document.body,
-	`<div id="root"><div id="background"></div><div id="a9"></div><div id="top"><div id="year"></div></div><div id="earth"><div id="stats"><div id="health"></div><div id="shield"></div><div id="damage"></div></div></div><div id="cards">${'<div class="b0"></div>'.repeat(
+	`<div id="root"><div id="background"></div><div id="game-controls"></div><div id="top"><div id="year"></div></div><div id="earth"><div id="stats"><div id="health"></div><div id="shield"></div><div id="damage"></div></div></div><div id="cards">${'<div class="card-slot"></div>'.repeat(
 		6
 	)}</div></div>`
 );
 
-const rootElement = querySelector("#root");
-const gameControlElement = querySelector("#a9", rootElement);
-const backgroundElement = querySelector("#background");
-const yearElement = querySelector("#year");
+const rootElement = querySelector('#root');
+const gameControlElement = querySelector('#game-controls', rootElement);
+const backgroundElement = querySelector('#background');
+const yearElement = querySelector('#year');
 let yearAmountElement;
 let yearMaxElement;
 let yearSvgElement;
-const earthElement = querySelector("#earth");
-const healthElement = querySelector("#health");
+const earthElement = querySelector('#earth');
+const healthElement = querySelector('#health');
 let healthAmountElement;
 let healthSvgElement;
-const shieldElement = querySelector("#shield");
+const shieldElement = querySelector('#shield');
 let shieldAmountElement;
 let shieldSvgElement;
-const damageElement = querySelector("#damage");
+const damageElement = querySelector('#damage');
 let damageAmountElement;
 let damageSvgElement;
-const cardSlotElements = querySelectorAll(".b0");
+const cardSlotElements = querySelectorAll('.card-slot');
 // #endregion
 
 // #region - Animations
@@ -505,7 +501,7 @@ const animateNumber = (targetElement, from, to, colorClass = null, delay = 0, on
 			if (colorClass != null) {
 				toggleClass(targetElement, colorClass, false);
 			}
-			if (typeof onEnd === "function") {
+			if (typeof onEnd === 'function') {
 				onEnd();
 			}
 		},
@@ -631,7 +627,7 @@ const zoomUpAndFadeOut = (targetElement, delay = 0, onEnd = null) => {
 			scaleY: 1.1,
 		},
 		onend(target) {
-			if (typeof onEnd === "function") {
+			if (typeof onEnd === 'function') {
 				onEnd();
 			}
 		},
@@ -723,7 +719,7 @@ const playAndFadeOut = (targetElement, directionElement, onEnd) => {
 									opacity: 0,
 								},
 								onend(target) {
-									if (typeof onEnd === "function") {
+									if (typeof onEnd === 'function') {
 										onEnd();
 									}
 								},
@@ -768,9 +764,9 @@ const zoomBounceAndFadeIn = (targetElement, delay = 0) => {
 // #region - One Time Use
 const addStarBackground = () => {
 	for (let i = 0; i < 50; i += 1) {
-		addContent(backgroundElement, getSVG(svgs.STAR, "#ffffff"));
+		addContent(backgroundElement, getSVG(svgs.STAR, '#ffffff'));
 	}
-	querySelectorAll("#background svg").forEach((star) => {
+	querySelectorAll('#background svg').forEach((star) => {
 		star.style.left = `${randomIntFromInterval(-5, mathMin(495, screenWidth - 5))}px`;
 		star.style.top = `${randomIntFromInterval(-5, mathMin(695, screenHeight - 5))}px`;
 		star.style.transform = `rotate(${randomIntFromInterval(0, 360)}deg) scale(${
@@ -784,46 +780,47 @@ const initElements = () => {
 	addStarBackground();
 
 	addContent(yearElement, getSVG(svgs.EARTH));
-	addContent(yearElement, `<b class="b1"></b>&nbsp;<b class="b2"></b>`);
-	yearAmountElement = querySelector(".b1", yearElement);
-	yearMaxElement = querySelector(".b2", yearElement);
-	yearSvgElement = querySelector("svg", yearElement);
+	addContent(yearElement, `<b class="current-year"></b>&nbsp;<b class="max-year"></b>`);
+	yearAmountElement = querySelector('.current-year', yearElement);
+	yearMaxElement = querySelector('.max-year', yearElement);
+	yearSvgElement = querySelector('svg', yearElement);
 
 	addContent(healthElement, getSVG(svgs.HEART));
-	addContent(healthElement, "<b></b>");
-	healthAmountElement = querySelector("b", healthElement);
-	healthSvgElement = querySelector("svg", healthElement);
+	addContent(healthElement, '<b></b>');
+	healthAmountElement = querySelector('b', healthElement);
+	healthSvgElement = querySelector('svg', healthElement);
 
 	addContent(shieldElement, getSVG(svgs.SHIELD));
-	addContent(shieldElement, "<b></b>");
-	shieldAmountElement = querySelector("b", shieldElement);
-	shieldSvgElement = querySelector("svg", shieldElement);
+	addContent(shieldElement, '<b></b>');
+	shieldAmountElement = querySelector('b', shieldElement);
+	shieldSvgElement = querySelector('svg', shieldElement);
 
 	addContent(damageElement, getSVG(svgs.SWORD));
-	addContent(damageElement, "<b></b>");
-	damageAmountElement = querySelector("b", damageElement);
-	damageSvgElement = querySelector("svg", damageElement);
+	addContent(damageElement, '<b></b>');
+	damageAmountElement = querySelector('b', damageElement);
+	damageSvgElement = querySelector('svg', damageElement);
 
 	cardSlotElements.forEach((cardSlot, cardIndex) => {
-		addEventListener(cardSlot, "click", () => playCard(cardIndex));
+		addEventListener(cardSlot, 'click', () => playCard(cardIndex));
 	});
 
 	addNearClickEvents();
 };
 
 const addNearClickEvents = () => {
-	querySelectorAll(".near").forEach((near) => (near.onclick = redirectToNear));
+	querySelectorAll('.near').forEach((near) => (near.onclick = redirectToNear));
 };
 
 const setupWorld = (world) => {
 	if (currentGameState.icon == null) {
 		Object.assign(currentGameState, worlds[currentGameState.world]);
 	}
-	toggleClass(earthElement, "moon", world === 0);
-	toggleClass(earthElement, "mars", world === 2);
-	toggleClass(earthElement, "death-star", world === 3);
+	toggleClass(earthElement, 'moon', world === 0);
+	toggleClass(earthElement, 'mars', world === 2);
+	toggleClass(earthElement, 'death-star', world === 3);
 
-	querySelectorAll("#earth > svg", rootElement).forEach((svg) => svg.remove());
+	querySelectorAll('#earth > svg', rootElement).forEach((svg) => svg.remove());
+	console.log(worlds, world);
 	addContent(earthElement, getSVG(worlds[world].icon));
 
 	replaceText(yearAmountElement, currentGameState.year);
@@ -833,12 +830,12 @@ const setupWorld = (world) => {
 	replaceText(damageAmountElement, currentGameState.damage);
 
 	cardSlotElements.forEach((cardContainer) => {
-		cardContainer.style.display = "none";
-		cardContainer.innerHTML = "";
+		cardContainer.style.display = 'none';
+		cardContainer.innerHTML = '';
 	});
 
 	currentGameState.cards.forEach((card, index) => {
-		cardSlotElements[index].style.display = "flex";
+		cardSlotElements[index].style.display = 'flex';
 	});
 
 	currentGameState.cards.forEach((card, index) => {
@@ -1058,17 +1055,17 @@ const transform = (target, data) => {
 	}
 
 	if (transformation.length > 0) {
-		setStyle(target, "transform", transformation.join(" "));
+		setStyle(target, 'transform', transformation.join(' '));
 	}
 
 	if (data.opacity != null) {
-		setStyle(target, "opacity", data.opacity);
+		setStyle(target, 'opacity', data.opacity);
 	}
 
 	if (data.glow != null) {
 		setStyle(
 			target,
-			"filter",
+			'filter',
 			`drop-shadow(0 0 ${target.dataset.blur} ${hexToRgbA(target.dataset.color, data.glow)})`
 		);
 	}
@@ -1122,12 +1119,12 @@ updatePremiumState = () => {
 
 	saveGame(currentGameState);
 
-	const worldButtons = querySelectorAll(".b4 button");
+	const worldButtons = querySelectorAll('.world-select button');
 
 	if (worldButtons.length > 3) {
 		toggleClass(
 			worldButtons[3],
-			"locked",
+			'locked',
 			currentGameState.highestStageUnclocked < 3 || currentGameState.isPremium === false
 		);
 	}
@@ -1136,11 +1133,11 @@ updatePremiumState = () => {
 };
 
 if (monetization) {
-	addEventListener(monetization, "monetizationstart", () => {
+	addEventListener(monetization, 'monetizationstart', () => {
 		currentGameState.webMonetizationEnabled = true;
 		updatePremiumState();
 	});
-	addEventListener(monetization, "monetizationstop", () => {
+	addEventListener(monetization, 'monetizationstop', () => {
 		currentGameState.webMonetizationEnabled = false;
 		updatePremiumState();
 	});
@@ -1149,13 +1146,13 @@ if (monetization) {
 
 // #region - Save/Load Game
 const saveGame = (state) => {
-	localStorage.setItem("go-away", JSON.stringify(state));
+	localStorage.setItem('go-away', JSON.stringify(state));
 
 	return state;
 };
 
 const loadGame = (forceNew = false) => {
-	const state = JSON.parse(localStorage.getItem("go-away"));
+	const state = JSON.parse(localStorage.getItem('go-away'));
 
 	if (state == null || forceNew) {
 		saveGame(currentGameState);
@@ -1344,7 +1341,2150 @@ const backgroundMusic = zzfxM(
 			[0.3, 0, 490, , 0.25, 0.45, , , , , , , 0.2, , , , , , , 0.1],
 			[0.185, 0, 386, , , 0.25, 6],
 		],
-		[[[,-1,".&&&&&.&.&&&&&.&,&&&&&,&,&&&&&,&3&&&&&3&3&&&&&3&.&&&&&.&.&&&&&.&"],[2,-1,"&:..:.&.&:&.:.&:&8,,8,&8&8&,8,&,&?33?3&3&?3WR3?3&?&:..:.&.&:&.:.&:"],[,1,"F<<FF<FFF<<FF<FFF<<FF<F<F<<FF<FFF<<FF<F<F<<FF<FFF<<FF<F<F<<FF<FF"],[1,-1,":&&:&&:<S:&&:&&::MR:&&:&&:&:&&:&&::MR:&&:&&:&:&&:&&::MR:&&:&&:&:&&:&&::MR"],[3,-1,"&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&"],[5,1,"::5&8&35&1&,.&8:113&0&38==<&8&3&113&?&13??1&3&,&.&&&&&&&&&&&&&&&"]],[[,-1,",&&&&&,&,&&&&&,&1&&&&&1&1&&&&&1&3&&&&&3&3&&&&&3&.&&&&&.&.&&&&&.&"],[2,-1,"&8,,8,&,&8&,8,&,&=11=1&=&=&1=1&1&?33?3&3&?3WR3?3&?&:..:.&.&:&.:.&:"],[,1,"F<<FF<FFF<<FF<FFF<<FF<F<F<<FF<FFF<<FF<F<F<<FF<FFF<<FF<F<F<<FF<FF"],[1,-1,":&&:&&:<S:&&:&&::MR:&&:&&:&:&&:&&::MR:&&:&&:&:&&:&&::MR:&&:&&:&:&&:&&::MR"],[3,-1,"&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&"],[5,1,"883&1&01&1&30&13==<&8&3&10&81&18113&?&8=?=8&==8&:&:81&,.&&&&&&&&"]],[[,-1,".&&&&&.&.&&&&&.&.&&&&&.&.&&&&&.&"],[2,-1,"&:..:.&.&:&.:.&:&:..:.&.&:&.:.&."],[,1,"F<<FF<FFF<<FF<FFF<<FF<F<F<<FF<FF"],[1,-1,":&&:&&:<S:&&:&&::S:&&:&&:&:&&:&&::S"],[3,-1,"&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&"]],[[,-1,"1&&&&&1&1&&&&&1&1&&&&&1&1&&&&&1&6&&&&&6&6&&&&&6&6&&&&&6&6&&&&&6&"],[2,-1,"&=11=1&1&=&1=1&=&=11=1&1&=&1=1&1&B66B6&6&B&6B6&6&B66B6&6&B&6B6&6"],[,1,"F<<FF<FFF<<FF<FFF<<FF<F<F<<FF<FFF<<FF<F<F<<FF<FFF<<FF<F<F<<FF<FF"],[1,-1,":&&:&&:<S:&&:&&::MR:&&:&&:&:&&:&&::MR:&&:&&:&:&&:&&::MR:&&:&&:&:&&:&&::MR"],[3,-1,"&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&"],[6,1,"5&&&&&&&&&&&&&&&8&&&&&&&&&&&58588&&&:&&&&&&&&&&&=&&&&&&&&&&&:=:="]],[[,-1,"3&&&&&3&3&&&&&3&3&&&&&3&3&&&&&3&5&&&&&5&5&&&&&5&5&&&&&5&5&&&&&5&"],[2,-1,"&?33?3&?&?&3?3&3&?33?3&?&?&3?3&?&A55A5&A&A&5A5&5&A55A5&A&A&5A5&5"],[,1,"F<<FF<FFF<<FF<FFF<<FF<F<F<<FF<FFF<<FF<F<F<<FF<FFF<<FF<F<F<<FF<FF"],[1,-1,":&&:&&:<S:&&:&&::MR:&&:&&:&:&&:&&::MR:&&:&&:&:&&:&&::MR:&&:&&:&:&&:&&::MR"],[3,-1,"&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&"],[6,1,"?&&&&&&&&&&&&&&&&&&&&&&&&&&&:=?&A&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"]],[[2,-1,"))))))))))))))))))))))))))))))))"],[,1,"F<<FF<FFF<<FF<FFF<<FF<F<F<<FF<FF"],[1,-1,":&&:&&:<S:&&:&&::MR:&&:&&:&:&&:&&::MR"],[3,-1,"&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&"],[4,1,")*******++++++++,,,,,,,,&&&&&&&&"],[7,1,"&&&&&&&&&&&&&&&&&&&&&&&&88&83300"]],[[4,-1,"555&5&55&5&55&55555&5&55A5&55&55555&5&55555&555&5&555&55&&&&&&&&"],[1,-1,":&&:&&:<S:&&:&&::MR:&&:&&:&:&&:&&::MR:&&:&&:&:&&:&&::MR:&&:&&:&:&&:&&::MR"],[,-1,"&<<&&<&&&<<&&<&&&<<&&<&<&<<&&<&&&<<&&<&<&<<&&<&&&<<&&<&<&<<&&<&&"],[3,-1,"&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&&&&&F&&&"]]].map(p=>p.map(p=>[...p.pop()].map(b=>p.push((b=b.charCodeAt())<74?b-38:p.pop()+(b-72>>1)/(b&1?10:100)))&&p)),
+		[
+			[
+				[
+					,
+					-1,
+					8,
+					,
+					,
+					,
+					,
+					,
+					8,
+					,
+					8,
+					,
+					,
+					,
+					,
+					,
+					8,
+					,
+					6,
+					,
+					,
+					,
+					,
+					,
+					6,
+					,
+					6,
+					,
+					,
+					,
+					,
+					,
+					6,
+					,
+					13,
+					,
+					,
+					,
+					,
+					,
+					13,
+					,
+					13,
+					,
+					,
+					,
+					,
+					,
+					13,
+					,
+					8,
+					,
+					,
+					,
+					,
+					,
+					8,
+					,
+					8,
+					,
+					,
+					,
+					,
+					,
+					8,
+					,
+				],
+				[
+					2,
+					-1,
+					,
+					20,
+					8,
+					8,
+					20,
+					8,
+					,
+					8,
+					,
+					20,
+					,
+					8,
+					20,
+					8,
+					,
+					20,
+					,
+					18,
+					6,
+					6,
+					18,
+					6,
+					,
+					18,
+					,
+					18,
+					,
+					6,
+					18,
+					6,
+					,
+					6,
+					,
+					25,
+					13,
+					13,
+					25,
+					13,
+					,
+					13,
+					,
+					25,
+					13.75,
+					13,
+					25,
+					13,
+					,
+					25,
+					,
+					20,
+					8,
+					8,
+					20,
+					8,
+					,
+					8,
+					,
+					20,
+					,
+					8,
+					20,
+					8,
+					,
+					20,
+				],
+				[
+					,
+					1,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					22,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					22,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					22,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+				],
+				[
+					1,
+					-1,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					22.5,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.25,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.25,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.25,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.25,
+				],
+				[
+					3,
+					-1,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+				],
+				[
+					5,
+					1,
+					20,
+					20,
+					15,
+					,
+					18,
+					,
+					13,
+					15,
+					,
+					11,
+					,
+					6,
+					8,
+					,
+					18,
+					20,
+					11,
+					11,
+					13,
+					,
+					10,
+					,
+					13,
+					18,
+					23,
+					23,
+					22,
+					,
+					18,
+					,
+					13,
+					,
+					11,
+					11,
+					13,
+					,
+					25,
+					,
+					11,
+					13,
+					25,
+					25,
+					11,
+					,
+					13,
+					,
+					6,
+					,
+					8,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+				],
+			],
+			[
+				[
+					,
+					-1,
+					6,
+					,
+					,
+					,
+					,
+					,
+					6,
+					,
+					6,
+					,
+					,
+					,
+					,
+					,
+					6,
+					,
+					11,
+					,
+					,
+					,
+					,
+					,
+					11,
+					,
+					11,
+					,
+					,
+					,
+					,
+					,
+					11,
+					,
+					13,
+					,
+					,
+					,
+					,
+					,
+					13,
+					,
+					13,
+					,
+					,
+					,
+					,
+					,
+					13,
+					,
+					8,
+					,
+					,
+					,
+					,
+					,
+					8,
+					,
+					8,
+					,
+					,
+					,
+					,
+					,
+					8,
+					,
+				],
+				[
+					2,
+					-1,
+					,
+					18,
+					6,
+					6,
+					18,
+					6,
+					,
+					6,
+					,
+					18,
+					,
+					6,
+					18,
+					6,
+					,
+					6,
+					,
+					23,
+					11,
+					11,
+					23,
+					11,
+					,
+					23,
+					,
+					23,
+					,
+					11,
+					23,
+					11,
+					,
+					11,
+					,
+					25,
+					13,
+					13,
+					25,
+					13,
+					,
+					13,
+					,
+					25,
+					13.75,
+					13,
+					25,
+					13,
+					,
+					25,
+					,
+					20,
+					8,
+					8,
+					20,
+					8,
+					,
+					8,
+					,
+					20,
+					,
+					8,
+					20,
+					8,
+					,
+					20,
+				],
+				[
+					,
+					1,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					22,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					22,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					22,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+				],
+				[
+					1,
+					-1,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					22.5,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.25,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.25,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.25,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.25,
+				],
+				[
+					3,
+					-1,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+				],
+				[
+					5,
+					1,
+					18,
+					18,
+					13,
+					,
+					11,
+					,
+					10,
+					11,
+					,
+					11,
+					,
+					13,
+					10,
+					,
+					11,
+					13,
+					23,
+					23,
+					22,
+					,
+					18,
+					,
+					13,
+					,
+					11,
+					10,
+					,
+					18,
+					11,
+					,
+					11,
+					18,
+					11,
+					11,
+					13,
+					,
+					25,
+					,
+					18,
+					23,
+					25,
+					23,
+					18,
+					,
+					23,
+					23,
+					18,
+					,
+					20,
+					,
+					20,
+					18,
+					11,
+					,
+					6,
+					8,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+				],
+			],
+			[
+				[, -1, 8, , , , , , 8, , 8, , , , , , 8, , 8, , , , , , 8, , 8, , , , , , 8, ,],
+				[
+					2,
+					-1,
+					,
+					20,
+					8,
+					8,
+					20,
+					8,
+					,
+					8,
+					,
+					20,
+					,
+					8,
+					20,
+					8,
+					,
+					20,
+					,
+					20,
+					8,
+					8,
+					20,
+					8,
+					,
+					8,
+					,
+					20,
+					,
+					8,
+					20,
+					8,
+					,
+					8,
+				],
+				[
+					,
+					1,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					22,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+				],
+				[
+					1,
+					-1,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					22.5,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.5,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.5,
+				],
+				[3, -1, , , , , 32, , , , , , , , 32, , , , , , , , 32, , , , , , , , 32, , , ,],
+			],
+			[
+				[
+					,
+					-1,
+					11,
+					,
+					,
+					,
+					,
+					,
+					11,
+					,
+					11,
+					,
+					,
+					,
+					,
+					,
+					11,
+					,
+					11,
+					,
+					,
+					,
+					,
+					,
+					11,
+					,
+					11,
+					,
+					,
+					,
+					,
+					,
+					11,
+					,
+					16,
+					,
+					,
+					,
+					,
+					,
+					16,
+					,
+					16,
+					,
+					,
+					,
+					,
+					,
+					16,
+					,
+					16,
+					,
+					,
+					,
+					,
+					,
+					16,
+					,
+					16,
+					,
+					,
+					,
+					,
+					,
+					16,
+					,
+				],
+				[
+					2,
+					-1,
+					,
+					23,
+					11,
+					11,
+					23,
+					11,
+					,
+					11,
+					,
+					23,
+					,
+					11,
+					23,
+					11,
+					,
+					23,
+					,
+					23,
+					11,
+					11,
+					23,
+					11,
+					,
+					11,
+					,
+					23,
+					,
+					11,
+					23,
+					11,
+					,
+					11,
+					,
+					28,
+					16,
+					16,
+					28,
+					16,
+					,
+					16,
+					,
+					28,
+					,
+					16,
+					28,
+					16,
+					,
+					16,
+					,
+					28,
+					16,
+					16,
+					28,
+					16,
+					,
+					16,
+					,
+					28,
+					,
+					16,
+					28,
+					16,
+					,
+					16,
+				],
+				[
+					,
+					1,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					22,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					22,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					22,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+				],
+				[
+					1,
+					-1,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					22.5,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.25,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.25,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.25,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.25,
+				],
+				[
+					3,
+					-1,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+				],
+				[
+					6,
+					1,
+					15,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					18,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					15,
+					18,
+					15,
+					18,
+					18,
+					,
+					,
+					,
+					20,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					23,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					20,
+					23,
+					20,
+					23,
+				],
+			],
+			[
+				[
+					,
+					-1,
+					13,
+					,
+					,
+					,
+					,
+					,
+					13,
+					,
+					13,
+					,
+					,
+					,
+					,
+					,
+					13,
+					,
+					13,
+					,
+					,
+					,
+					,
+					,
+					13,
+					,
+					13,
+					,
+					,
+					,
+					,
+					,
+					13,
+					,
+					15,
+					,
+					,
+					,
+					,
+					,
+					15,
+					,
+					15,
+					,
+					,
+					,
+					,
+					,
+					15,
+					,
+					15,
+					,
+					,
+					,
+					,
+					,
+					15,
+					,
+					15,
+					,
+					,
+					,
+					,
+					,
+					15,
+					,
+				],
+				[
+					2,
+					-1,
+					,
+					25,
+					13,
+					13,
+					25,
+					13,
+					,
+					25,
+					,
+					25,
+					,
+					13,
+					25,
+					13,
+					,
+					13,
+					,
+					25,
+					13,
+					13,
+					25,
+					13,
+					,
+					25,
+					,
+					25,
+					,
+					13,
+					25,
+					13,
+					,
+					25,
+					,
+					27,
+					15,
+					15,
+					27,
+					15,
+					,
+					27,
+					,
+					27,
+					,
+					15,
+					27,
+					15,
+					,
+					15,
+					,
+					27,
+					15,
+					15,
+					27,
+					15,
+					,
+					27,
+					,
+					27,
+					,
+					15,
+					27,
+					15,
+					,
+					15,
+				],
+				[
+					,
+					1,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					22,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					22,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					22,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+				],
+				[
+					1,
+					-1,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					22.5,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.25,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.25,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.25,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.25,
+				],
+				[
+					3,
+					-1,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+				],
+				[
+					6,
+					1,
+					25,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					20,
+					23,
+					25,
+					,
+					27,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+				],
+			],
+			[
+				[
+					2, -1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+					3, 3, 3, 3,
+				],
+				[
+					,
+					1,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					22,
+					32,
+					22,
+					22,
+					32,
+					32,
+					22,
+					32,
+					32,
+				],
+				[
+					1,
+					-1,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					22.5,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.25,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.25,
+				],
+				[3, -1, , , , , 32, , , , , , , , 32, , , , , , , , 32, , , , , , , , 32, , , ,],
+				[
+					4,
+					1,
+					3,
+					4,
+					4,
+					4,
+					4,
+					4,
+					4,
+					4,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					6,
+					6,
+					6,
+					6,
+					6,
+					6,
+					6,
+					6,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+				],
+				[7, 1, , , , , , , , , , , , , , , , , , , , , , , , , 18, 18, , 18, 13, 13, 10, 10],
+			],
+			[
+				[
+					4,
+					-1,
+					15,
+					15,
+					15,
+					,
+					15,
+					,
+					15,
+					15,
+					,
+					15,
+					,
+					15,
+					15,
+					,
+					15,
+					15,
+					15,
+					15,
+					15,
+					,
+					15,
+					,
+					15,
+					15,
+					27,
+					15,
+					,
+					15,
+					15,
+					,
+					15,
+					15,
+					15,
+					15,
+					15,
+					,
+					15,
+					,
+					15,
+					15,
+					15,
+					15,
+					15,
+					,
+					15,
+					15,
+					15,
+					,
+					15,
+					,
+					15,
+					15,
+					15,
+					,
+					15,
+					15,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+				],
+				[
+					1,
+					-1,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					22.5,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.25,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.25,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.25,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					20,
+					,
+					,
+					20,
+					,
+					,
+					20,
+					20.25,
+				],
+				[
+					,
+					-1,
+					,
+					22,
+					22,
+					,
+					,
+					22,
+					,
+					,
+					,
+					22,
+					22,
+					,
+					,
+					22,
+					,
+					,
+					,
+					22,
+					22,
+					,
+					,
+					22,
+					,
+					22,
+					,
+					22,
+					22,
+					,
+					,
+					22,
+					,
+					,
+					,
+					22,
+					22,
+					,
+					,
+					22,
+					,
+					22,
+					,
+					22,
+					22,
+					,
+					,
+					22,
+					,
+					,
+					,
+					22,
+					22,
+					,
+					,
+					22,
+					,
+					22,
+					,
+					22,
+					22,
+					,
+					,
+					22,
+					,
+					,
+				],
+				[
+					3,
+					-1,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+					,
+					,
+					,
+					,
+					32,
+					,
+					,
+					,
+				],
+			],
+		],
 		[0, 1, 2, 1, 3, 4, 5],
 		,
 		,
@@ -1468,37 +3608,37 @@ const enableSound = () => {
 	zzfxX.resume();
 	currentGameState.soundOn = true;
 	saveGame(currentGameState);
-	setStyle(soundOffElement, "display", "none");
-	setStyle(soundOnElement, "display", "block");
+	setStyle(soundOffElement, 'display', 'none');
+	setStyle(soundOnElement, 'display', 'block');
 };
 
 const disableSound = () => {
 	zzfxX.suspend();
 	currentGameState.soundOn = false;
 	saveGame(currentGameState);
-	setStyle(soundOnElement, "display", "none");
-	setStyle(soundOffElement, "display", "block");
+	setStyle(soundOnElement, 'display', 'none');
+	setStyle(soundOffElement, 'display', 'block');
 };
 
 const initSound = () => {
 	zzfxX.suspend();
 
-	addContent(gameControlElement, `<button id="b6">${getSVG(svgs.SOUND_ON)}</button>`);
-	addContent(gameControlElement, `<button id="b7">${getSVG(svgs.SOUND_OFF)}</button>`);
+	addContent(gameControlElement, `<button id="sound-on">${getSVG(svgs.SOUND_ON)}</button>`);
+	addContent(gameControlElement, `<button id="sound-off">${getSVG(svgs.SOUND_OFF)}</button>`);
 
-	soundOnElement = querySelector("#b6", gameControlElement);
-	soundOffElement = querySelector("#b7", gameControlElement);
+	soundOnElement = querySelector('#sound-on', gameControlElement);
+	soundOffElement = querySelector('#sound-off', gameControlElement);
 
 	if (currentGameState.soundOn === null) {
 		showPopup(
-			"Play with sound?",
+			'Play with sound?',
 			[
 				{
-					content: "No",
-					action: "close",
+					content: 'No',
+					action: 'close',
 				},
 				{
-					content: "Yes",
+					content: 'Yes',
 					action: () => {
 						enableSound();
 					},
@@ -1508,13 +3648,13 @@ const initSound = () => {
 				disableSound();
 			},
 			false,
-			"",
+			'',
 			500
 		);
 	} else if (currentGameState.soundOn === true) {
-		addEventListener(document, "click", function startInitialSound() {
+		addEventListener(document, 'click', function startInitialSound() {
 			zzfxX.resume();
-			removeEventListener(document, "click", startInitialSound);
+			removeEventListener(document, 'click', startInitialSound);
 		});
 	} else {
 		disableSound();
@@ -1526,11 +3666,11 @@ const initSound = () => {
 		disableSound();
 	}
 
-	addEventListener(soundOnElement, "click", () => {
+	addEventListener(soundOnElement, 'click', () => {
 		disableSound();
 	});
 
-	addEventListener(soundOffElement, "click", () => {
+	addEventListener(soundOffElement, 'click', () => {
 		enableSound();
 	});
 };
@@ -1624,7 +3764,7 @@ const nextYear = () => {
 		animationTarget.YEAR,
 		() => {
 			animateNumber(yearAmountElement, oldYear, newYear);
-			glowElementInAndOut(yearSvgElement, "5px", "#48baff", 300);
+			glowElementInAndOut(yearSvgElement, '5px', '#48baff', 300);
 		},
 		700
 	);
@@ -1676,21 +3816,21 @@ const showWorldSelectScreen = () => {
 		`Select a World<p>Become <b>V.I.P.</b> and unlock <b>4x</b> speed and <b>Death Star</b> world with <a target="_blank" href="https://coil.com/">Coil</a> membership or <a class="near" href="#">NEAR</a> login!</p>`,
 		[
 			{
-				content: getSVG(svgs.MOON) + "<b>Moon</b>",
+				content: getSVG(svgs.MOON) + '<b>Moon</b>',
 				action: () => {
 					openWorld(0);
 				},
 				locked: false,
 			},
 			{
-				content: getSVG(svgs.EARTH) + "<b>Earth</b>",
+				content: getSVG(svgs.EARTH) + '<b>Earth</b>',
 				action: () => {
 					openWorld(1);
 				},
 				locked: currentGameState.highestStageUnclocked < 1,
 			},
 			{
-				content: getSVG(svgs.MARS) + "<b>Mars</b>",
+				content: getSVG(svgs.MARS) + '<b>Mars</b>',
 				action: () => {
 					openWorld(2);
 				},
@@ -1706,7 +3846,7 @@ const showWorldSelectScreen = () => {
 		],
 		() => {},
 		true,
-		"b4"
+		'world-select'
 	);
 };
 
@@ -1739,17 +3879,17 @@ const showResultScreen = (message) => {
 	currentGameState.gameEnded = true;
 	const buttons = [
 		{
-			content: "World Select",
+			content: 'World Select',
 			action: showWorldSelectScreen,
 		},
 	];
 
-	let popUpClass = "";
+	let popUpClass = '';
 
 	if (playerHasLost()) {
-		popUpClass = "lost";
+		popUpClass = 'lost';
 		buttons.push({
-			content: "Try Again",
+			content: 'Try Again',
 			action: retryWorld,
 		});
 	}
@@ -1758,24 +3898,24 @@ const showResultScreen = (message) => {
 		popUpClass = `won`;
 
 		if (currentGameState.world === 0) {
-			popUpClass += " moon";
+			popUpClass += ' moon';
 		}
 
 		if (currentGameState.world === 1) {
-			popUpClass += " earth";
+			popUpClass += ' earth';
 		}
 
 		if (currentGameState.world === 2) {
-			popUpClass += " mars";
+			popUpClass += ' mars';
 		}
 
 		if (currentGameState.world === 3) {
-			popUpClass += " death-star";
+			popUpClass += ' death-star';
 		}
 
 		if (gameIsFinished() === false) {
 			buttons.push({
-				content: "Next World",
+				content: 'Next World',
 				action: nextWorld,
 			});
 		}
@@ -1810,14 +3950,14 @@ const playCard = (cardIndex) => {
 
 		currentGameState.cards.forEach((card, index) => {
 			if (card !== null && (card.played === true || cardIndex != index)) {
-				if (typeof card.onTurn === "function") {
+				if (typeof card.onTurn === 'function') {
 					card.onTurn();
 				}
 			}
 		});
 
 		currentGameState.cards.forEach((card) => {
-			if (card !== null && typeof card.onEndTurn === "function") {
+			if (card !== null && typeof card.onEndTurn === 'function') {
 				card.onEndTurn();
 			}
 		});
@@ -1884,7 +4024,7 @@ const decorateNormalCard = (slot, card, icon, amount) => {
 		`<div class="card"><div class="effect">${amount}</div>${icon}</div>`
 	);
 
-	card.cardElement = querySelector(".card", card.cardContainerElement);
+	card.cardElement = querySelector('.card', card.cardContainerElement);
 
 	checkExpireStatus(card);
 };
@@ -1916,9 +4056,9 @@ class HealthCard {
 				playAndFadeOut(this.cardElement, healthSvgElement, () => {
 					this.cardElement.remove();
 				}); // 1,650 ms
-				animateNumber(healthAmountElement, oldHealth, newHealth, "green", 1150);
+				animateNumber(healthAmountElement, oldHealth, newHealth, 'green', 1150);
 				baunceElement(healthElement, 5, 1150);
-				glowElementInAndOut(healthSvgElement, "5px", "#d0021b", 200, 1150);
+				glowElementInAndOut(healthSvgElement, '5px', '#d0021b', 200, 1150);
 			},
 			1650
 		);
@@ -1936,7 +4076,7 @@ class HealthCard {
 				animationTarget.CARD_TURN,
 				() => {
 					playSound(cardExpiresSound);
-					this.cardElement.style.filter = "grayscale(1)";
+					this.cardElement.style.filter = 'grayscale(1)';
 					requestAnimationFrameLocal(() => {
 						baunceElement(this.cardElement, 20);
 						zoomUpAndFadeOut(this.cardElement, 500, () => {
@@ -1993,9 +4133,9 @@ class ShieldCard {
 				playAndFadeOut(this.cardElement, shieldSvgElement, () => {
 					this.cardElement.remove();
 				}); // 1,650 ms
-				animateNumber(shieldAmountElement, oldShield, newShield, "green", 1150);
+				animateNumber(shieldAmountElement, oldShield, newShield, 'green', 1150);
 				baunceElement(shieldElement, 5, 1150);
-				glowElementInAndOut(shieldSvgElement, "5px", "#48baff", 200, 1150);
+				glowElementInAndOut(shieldSvgElement, '5px', '#48baff', 200, 1150);
 			},
 			1650
 		);
@@ -2013,7 +4153,7 @@ class ShieldCard {
 				animationTarget.CARD_TURN,
 				() => {
 					playSound(cardExpiresSound);
-					this.cardElement.style.filter = "grayscale(1)";
+					this.cardElement.style.filter = 'grayscale(1)';
 					requestAnimationFrameLocal(() => {
 						baunceElement(this.cardElement, 20);
 						zoomUpAndFadeOut(this.cardElement, 500, () => {
@@ -2070,9 +4210,9 @@ class DamageCard {
 				playAndFadeOut(this.cardElement, damageSvgElement, () => {
 					this.cardElement.remove();
 				}); // 1,650 ms
-				animateNumber(damageAmountElement, oldDamage, newDamage, "green", 1150);
+				animateNumber(damageAmountElement, oldDamage, newDamage, 'green', 1150);
 				baunceElement(damageElement, 5, 1150);
-				glowElementInAndOut(damageSvgElement, "5px", "#d0021b", 200, 1150);
+				glowElementInAndOut(damageSvgElement, '5px', '#d0021b', 200, 1150);
 			},
 			1650
 		);
@@ -2090,7 +4230,7 @@ class DamageCard {
 				animationTarget.CARD_TURN,
 				() => {
 					playSound(cardExpiresSound);
-					this.cardElement.style.filter = "grayscale(1)";
+					this.cardElement.style.filter = 'grayscale(1)';
 					requestAnimationFrameLocal(() => {
 						baunceElement(this.cardElement, 20);
 						zoomUpAndFadeOut(this.cardElement, 500, () => {
@@ -2134,7 +4274,7 @@ class EnemyCard {
 				animationTarget.PLAY_CARD,
 				() => {
 					playSound(laserShotSound);
-					animateNumber(this.shieldAmountElement, oldShield, newShield, "red");
+					animateNumber(this.shieldAmountElement, oldShield, newShield, 'red');
 					baunceElement(this.cardElement, 20);
 				},
 				900
@@ -2150,7 +4290,7 @@ class EnemyCard {
 					animationTarget.PLAY_CARD,
 					() => {
 						playSound(explosionSound);
-						animateNumber(this.healthAmountElement, oldHealth, newHealth, "red");
+						animateNumber(this.healthAmountElement, oldHealth, newHealth, 'red');
 						baunceElement(this.cardElement, 20);
 					},
 					900
@@ -2164,7 +4304,7 @@ class EnemyCard {
 					animationTarget.PLAY_CARD,
 					() => {
 						playSound(explosionSound);
-						animateNumber(this.healthAmountElement, oldHealth, 0, "red");
+						animateNumber(this.healthAmountElement, oldHealth, 0, 'red');
 						baunceElement(this.cardElement, 20);
 						zoomUpAndFadeOut(this.cardElement, 500, () => {
 							this.cardElement.remove();
@@ -2186,8 +4326,8 @@ class EnemyCard {
 				animationTarget.CARD_TURN,
 				() => {
 					playSound(blipSound);
-					animateNumber(this.turnsAmountElement, oldTurns, newTurns, "red");
-					glowElementInAndOut(this.cardElement, "5px", "#f00", 300, 0);
+					animateNumber(this.turnsAmountElement, oldTurns, newTurns, 'red');
+					glowElementInAndOut(this.cardElement, '5px', '#f00', 300, 0);
 				},
 				800
 			);
@@ -2211,10 +4351,10 @@ class EnemyCard {
 						playAndFadeOut(this.cardElement, shieldSvgElement, () => {
 							this.cardElement.remove();
 						}); // 1,650 ms
-						animateNumber(shieldAmountElement, oldShield, newShield, "red", 1150);
+						animateNumber(shieldAmountElement, oldShield, newShield, 'red', 1150);
 						baunceElement(shieldElement, 5, 1150);
-						glowElementInAndOut(shieldSvgElement, "5px", "#48baff", 200, 1150);
-						glowElementInAndOut(this.cardElement, "5px", "#f00", 0, 0);
+						glowElementInAndOut(shieldSvgElement, '5px', '#48baff', 200, 1150);
+						glowElementInAndOut(this.cardElement, '5px', '#f00', 0, 0);
 					},
 					1650
 				);
@@ -2237,10 +4377,10 @@ class EnemyCard {
 						playAndFadeOut(this.cardElement, healthSvgElement, () => {
 							this.cardElement.remove();
 						}); // 1,650 ms
-						animateNumber(healthAmountElement, oldHealth, newHealth, "red", 1150);
+						animateNumber(healthAmountElement, oldHealth, newHealth, 'red', 1150);
 						baunceElement(healthElement, 5, 1150);
-						glowElementInAndOut(healthSvgElement, "5px", "#d0021b", 200, 1150);
-						glowElementInAndOut(this.cardElement, "5px", "#f00", 0, 0);
+						glowElementInAndOut(healthSvgElement, '5px', '#d0021b', 200, 1150);
+						glowElementInAndOut(this.cardElement, '5px', '#f00', 0, 0);
 					},
 					1650
 				);
@@ -2290,12 +4430,12 @@ const decorateEnemyCard = (slot, data, card, icon) => {
 
 	addContent(card.cardContainerElement, `<div class="card enemy">${stats}${icon}</div>`);
 
-	card.cardElement = querySelector(".card", card.cardContainerElement);
+	card.cardElement = querySelector('.card', card.cardContainerElement);
 
-	card.damageAmountElement = querySelector(".damage b", card.cardContainerElement);
-	card.turnsAmountElement = querySelector(".turns b", card.cardContainerElement);
-	card.shieldAmountElement = querySelector(".shield b", card.cardContainerElement);
-	card.healthAmountElement = querySelector(".health b", card.cardContainerElement);
+	card.damageAmountElement = querySelector('.damage b', card.cardContainerElement);
+	card.turnsAmountElement = querySelector('.turns b', card.cardContainerElement);
+	card.shieldAmountElement = querySelector('.shield b', card.cardContainerElement);
+	card.healthAmountElement = querySelector('.health b', card.cardContainerElement);
 
 	checkDangerStatus(card);
 };
@@ -2536,10 +4676,10 @@ const worlds = [
 ];
 
 const updateLockIcons = () => {
-	querySelectorAll(".lock", rootElement).forEach((lockElement) => {
+	querySelectorAll('.lock', rootElement).forEach((lockElement) => {
 		lockElement.remove();
 	});
-	querySelectorAll(".locked", rootElement).forEach((lockedElement) => {
+	querySelectorAll('.locked', rootElement).forEach((lockedElement) => {
 		addContent(lockedElement, getSVG(svgs.LOCK));
 	});
 };
@@ -2550,24 +4690,24 @@ const redirectToNear = (event) => {
 	event.preventDefault();
 	event.stopPropagation();
 	if (wallet !== null) {
-		wallet["requestSignIn"]();
+		wallet['requestSignIn']();
 	}
 };
 
 const initNear = () => {
 	window.nearApi
 		.connect({
-			"nodeUrl": "https://rpc.testnet.near.org",
-			"walletUrl": "https://wallet.testnet.near.org",
-			"helperUrl": "https://helper.testnet.near.org",
-			"explorerUrl": "https://explorer.testnet.near.org",
-			"networkId": "testnet",
-			"keyStore": new window.nearApi.keyStores.BrowserLocalStorageKeyStore(),
+			nodeUrl: 'https://rpc.testnet.near.org',
+			walletUrl: 'https://wallet.testnet.near.org',
+			helperUrl: 'https://helper.testnet.near.org',
+			explorerUrl: 'https://explorer.testnet.near.org',
+			networkId: 'testnet',
+			keyStore: new window.nearApi.keyStores.BrowserLocalStorageKeyStore(),
 		})
 		.then((near) => {
 			wallet = new window.nearApi.WalletConnection(near);
 
-			if (wallet["isSignedIn"]()) {
+			if (wallet['isSignedIn']()) {
 				currentGameState.loggedInUsingNear = true;
 			} else {
 				currentGameState.loggedInUsingNear = false;
@@ -2579,10 +4719,10 @@ const initNear = () => {
 
 const initDrand = () => {
 	if (currentGameState.seed == null) {
-		fetch("https://api.drand.sh/public/latest")
+		fetch('https://api.drand.sh/public/latest')
 			.then((response) => response.json())
 			.then((data) => {
-				currentGameState.seed = data["randomness"].hashCode();
+				currentGameState.seed = data['randomness'].hashCode();
 				random = prng(currentGameState.seed, currentGameState.seedPosition);
 				saveGame(currentGameState);
 			});
@@ -2592,11 +4732,9 @@ const initDrand = () => {
 };
 
 const setup = () => {
-	addContent(document.head, `<style>${css}</style>`);
-
 	initDrand();
 
-	loadGame();
+	loadGame(true);
 
 	initNear();
 
